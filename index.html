@@ -349,7 +349,19 @@ function placeAds(){
 window.location.href = "t.me/DANI_TECH01";
 }
 
-</script></body> <h2 style="color:green;">Firebase is loading...</h2> <!-- Firebase SDK (CDN version for HTML sites) -->
+</script></body> <div class="section">
+  <h2>Create Account</h2>
+
+  <input id="username" placeholder="Username" style="width:100%;padding:10px;margin-top:10px;">
+  <input id="email" placeholder="Email" style="width:100%;padding:10px;margin-top:10px;">
+  <input id="password" type="password" placeholder="Password" style="width:100%;padding:10px;margin-top:10px;">
+
+  <button onclick="signup()" style="margin-top:15px;padding:12px;width:100%;background:#0b6a4a;color:white;border:none;border-radius:10px;">
+    Sign Up
+  </button>
+
+  <p id="signupMsg" style="margin-top:10px;color:green;"></p>
+</div> <h2 style="color:green;">Firebase is loading...</h2> <!-- Firebase SDK (CDN version for HTML sites) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -371,5 +383,47 @@ window.location.href = "t.me/DANI_TECH01";
   const db = firebase.firestore();
 
   console.log("Firebase connected successfully ✔");
+</script> function signup() {
+  const username = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const msg = document.getElementById("signupMsg");
+
+  if (!username || !email || !password) {
+    msg.style.color = "red";
+    msg.innerText = "Fill all fields";
+    return;
+  }
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+
+      // Save user data in Firestore
+      return db.collection("users").doc(user.uid).set({
+        username: username,
+        email: email,
+        balance: 0,
+        affiliateWallet: 0,
+        taskWallet: 0,
+        referralCode: username,
+        createdAt: new Date()
+      });
+    })
+    .then(() => {
+      msg.style.color = "green";
+      msg.innerText = "Account created successfully ✔";
+
+      // generate referral link
+      document.getElementById("signupMsg").innerHTML =
+        "Your referral link: https://fortunearners.netlify.app/signup?ref=" +
+        document.getElementById("username").value;
+    })
+    .catch((error) => {
+      msg.style.color = "red";
+      msg.innerText = error.message;
+    });
+}
 </script>
 </html>
