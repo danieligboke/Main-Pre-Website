@@ -128,7 +128,7 @@ document.getElementById("userBox").style.display="block";
 document.getElementById("userInfo").innerHTML =
 "Username: " + data.username + "<br>Email: " + data.email;
 
-}else{
+}else{document.getElementById("plansBox").style.display="none";
 document.getElementById("authBox").style.display="block";
 document.getElementById("userBox").style.display="none";
 }
@@ -186,7 +186,53 @@ document.getElementById("status").innerText=err.message;
 }
 
 /* LOGOUT */
-function logout(){
+function logout(){async function activatePlan(planName,planAmount,refBonus){
+
+const user = auth.currentUser;
+
+if(!user){
+alert("Login first");
+return;
+}
+
+const userRef = db.collection("users").doc(user.uid);
+
+const doc = await userRef.get();
+const data = doc.data();
+
+/* update current user's plan */
+await userRef.update({
+plan: planName
+});
+
+/* referral reward */
+if(data.referredBy){
+
+const query = await db.collection("users")
+.where("username","==",data.referredBy)
+.get();
+
+if(!query.empty){
+
+const referrerDoc = query.docs[0];
+
+const referrerData = referrerDoc.data();
+
+let currentAffiliate =
+referrerData.affiliateWallet || 0;
+
+await referrerDoc.ref.update({
+affiliateWallet:
+currentAffiliate + refBonus
+});
+
+}
+
+}
+
+alert(planName + " activated successfully ✔");
+
+}
 auth.signOut();
 }
 </script>
