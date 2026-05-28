@@ -48,7 +48,7 @@ font-weight:bold;
 
 <body>
 
-<h2>FORTUNE EARNERS (Phase 1)</h2>
+<h2>FORTUNE EARNERS</h2>
 
 <div id="authBox" class="box">
 
@@ -118,16 +118,25 @@ let password=document.getElementById("password").value;
 
 let status=document.getElementById("status");
 
+// 👉 capture referral from URL
+const urlParams = new URLSearchParams(window.location.search);
+const ref = urlParams.get("ref");
+
 auth.createUserWithEmailAndPassword(email,password)
 .then(res=>{
 return db.collection("users").doc(res.user.uid).set({
 username: username,
 email: email,
+
 balance: 0,
 taskWallet: 0,
 affiliateWallet: 0,
+
 plan: "none",
+
 referralCode: username,
+referredBy: ref || null,   // ✅ NEW LINE
+
 createdAt: new Date()
 });
 })
