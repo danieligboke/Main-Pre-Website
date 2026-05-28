@@ -118,7 +118,7 @@ const db = firebase.firestore();
 
 /* AUTH STATE */
 auth.onAuthStateChanged(async user=>{
-if(user){
+if(user){document.getElementById("plansBox").style.display="block";
 let doc = await db.collection("users").doc(user.uid).get();
 let data = doc.data();
 
