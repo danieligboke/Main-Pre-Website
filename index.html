@@ -1,9 +1,11 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FORTUNE EARNERS</title><style>
+<title>FORTUNE EARNERS</title>
 
+<style>
 *{
 margin:0;
 padding:0;
@@ -38,22 +40,13 @@ font-weight:bold;
 color:#004d37;
 }
 
-.container{
-padding:15px;
-}
+.container{padding:15px;}
 
 .card{
 background:#1e3a8a;
 border-radius:25px;
 padding:20px;
 color:white;
-margin-bottom:20px;
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
 margin-bottom:20px;
 }
 
@@ -73,11 +66,7 @@ border-radius:20px;
 margin-bottom:20px;
 }
 
-.balance{
-font-size:35px;
-font-weight:bold;
-margin-top:10px;
-}
+.balance{font-size:35px;font-weight:bold;margin-top:10px;}
 
 .withdraw{
 margin-top:15px;
@@ -89,41 +78,11 @@ border-radius:30px;
 cursor:pointer;
 }
 
-.stats{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-}
-
-.small-card{
-background:#2563eb;
+.section{
+background:white;
 padding:20px;
 border-radius:20px;
-color:white;
-}
-
-.small-card h2{
-color:#d7ff26;
-margin-bottom:10px;
-}
-
-.ref-box{
-background:#2563eb;
-padding:15px;
-border-radius:20px;
-margin-top:15px;
-word-break:break-word;
-color:white;
-}
-
-.task{
-background:white;
-padding:15px;
-border-radius:15px;
-margin-bottom:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+margin-top:20px;
 }
 
 .task button{
@@ -132,51 +91,6 @@ color:white;
 border:none;
 padding:10px 20px;
 border-radius:10px;
-cursor:pointer;
-}
-
-.section{
-background:white;
-padding:20px;
-border-radius:20px;
-margin-top:20px;
-}
-
-.section-header{
-display:flex;
-justify-content:space-between;
-margin-bottom:20px;
-}
-
-.ad-btn{
-display:block;
-width:100%;
-background:#60a5fa;
-color:black;
-padding:15px;
-border:none;
-border-radius:15px;
-font-size:16px;
-font-weight:bold;
-margin-top:20px;
-cursor:pointer;
-}
-
-.activate{
-background:white;
-padding:20px;
-border-radius:20px;
-margin-bottom:20px;
-text-align:center;
-}
-
-.activate button{
-background:#1e3a8a;
-color:white;
-border:none;
-padding:15px 25px;
-border-radius:30px;
-margin-top:15px;
 cursor:pointer;
 }
 
@@ -191,239 +105,103 @@ justify-content:space-around;
 padding:12px;
 box-shadow:0 -2px 10px rgba(0,0,0,0.08);
 }
+</style>
+</head>
 
-.nav-item{
-text-align:center;
-font-size:14px;
-}
+<body>
 
-.notice{
-background:#fff3cd;
-padding:15px;
-border-radius:15px;
-margin-top:20px;
-color:#856404;
-}
-
-</style></head><body><div class="header">
+<div class="header">
 <div class="logo">FE</div>
 <h3>FORTUNE EARNERS</h3>
-</div><div class="container"><!-- Activation --><div class="activate"><h2>Activate Your Account</h2><p style="margin-top:10px;">
-Activate with ₦750 to unlock daily tasks,
-ads earnings and referral commissions.
-</p><button onclick="activateAccount()">
-Activate Now
-</button></div><!-- Dashboard --><div class="card"><div class="top"><div>
-<p>Welcome Back</p>
-<h1>signup</h1>
-</div><div class="plan">
-(user's current plan)
-</div></div><div class="balance-box"><p>Total Balance</p><div class="balance" id="mainBalance">
-₦0
-</div><button class="withdraw" onclick="withdrawMoney()">
-Withdraw
-</button></div><!-- Wallets --><div class="stats"><div class="small-card"><h2 id="affiliateWallet">
-₦0
-</h2><p>Affiliate Wallet</p></div><div class="small-card"><h2 id="taskWallet">
-₦0
-</h2><p>Task Wallet</p></div></div><!-- Withdrawal Status --><div class="small-card" style="margin-top:15px;"><h2>Withdrawal Status</h2><p id="withdrawStatus"
-style="margin-top:10px;
-color:#60a5fa;
-font-weight:bold;">
-OPEN
-</p><button onclick="toggleWithdrawal()"
-style="
-margin-top:15px;
-background:#60a5fa;
-border:none;
-padding:10px 20px;
-border-radius:10px;
-font-weight:bold;
-cursor:pointer;">
+</div>
 
-Toggle Withdraw
+<!-- SIGNUP -->
+<div class="section">
+<h2>Create Account</h2>
 
-</button></div><!-- Referral --><div class="ref-box">https://fortunearners.netlify.app/signup?ref=signup
+<input id="username" placeholder="Username" style="width:100%;padding:10px;margin-top:10px;">
+<input id="email" placeholder="Email" style="width:100%;padding:10px;margin-top:10px;">
+<input id="password" type="password" placeholder="Password" style="width:100%;padding:10px;margin-top:10px;">
 
-</div></div><!-- Tasks --><div class="section"><div class="section-header">
-<h2>Daily Tasks</h2>
-<span>Today</span>
-</div><div class="task"><div>
-<h3>Watch Sponsored Ad</h3>
-<p>Earn ₦100</p>
-</div><button onclick="earnMoney(100)">
-Start
-</button></div><div class="task"><div>
-<h3>Perform Task</h3>
-<p>Earn ₦100</p>
-</div><button onclick="earnMoney(100)">
-Start
-</button></div><div class="task"><div>
-<h3>Watch Sponsored Ad</h3>
-<p>Earn ₦200</p>
-</div><button onclick="earnMoney(200)">
-Start
-</button></div><div class="task"><div>
-<h3>Perform Task</h3>
-<p>Earn ₦100</p>
-</div><button onclick="earnMoney(100)">
-Start
-</button></div><div class="task"><div>
-<h3>Watch Sponsored Ad</h3>
-<p>Earn ₦200</p>
-</div><button onclick="earnMoney(200)">
-Start
-</button></div></div><!-- Advertise --><div class="section"><h2>Advertise With Us</h2><p style="margin-top:10px;">
-Promote your business, Telegram group, YouTube channel, Facebook page, TikTok account or products.
-</p><button class="ad-btn" onclick="placeAds()">
-Place Ads
-</button></div><!-- Announcement --><div class="notice"><b>Announcement:</b><br><br>
+<button onclick="signup()" style="margin-top:15px;padding:12px;width:100%;background:#0b6a4a;color:white;border:none;border-radius:10px;">
+Sign Up
+</button>
 
-Affiliate withdrawals are available daily (5:00pm - 6:00pm).<br>
-Task withdrawals are every 10th and 30th of each month.
+<p id="signupMsg" style="margin-top:10px;color:green;"></p>
+</div>
 
-<br><br>
+<h3 style="color:green;text-align:center;">Firebase is loading...</h3>
 
-Minimum withdrawal: ₦1,000 (Affiliate)
+<!-- DASHBOARD -->
+<div class="card">
+<div>
+<h2>Welcome</h2>
+<h1 id="displayName">Guest</h1>
+</div>
 
-</div></div><!-- Bottom Navigation --><div class="bottom-nav"><div class="nav-item">📋 <br> Tasks</div>
-<div class="nav-item">📢 <br> Ads</div>
-<div class="nav-item">🏠 <br> Home</div>
-<div class="nav-item">👥 <br> Refer</div>
-<div class="nav-item">👤 <br> Profile</div></div><script>
+<div class="balance-box">
+<p>Total Balance</p>
+<div class="balance" id="mainBalance">₦0</div>
+</div>
+</div>
 
-let mainBalance = 0;
-let affiliateWallet = 0;
-let taskWallet = 0;
-
-let withdrawalOpen = true;
-
-function earnMoney(amount){
-
-taskWallet += amount;
-mainBalance += amount;
-
-document.getElementById("taskWallet").innerHTML =
-"₦" + taskWallet.toLocaleString();
-
-document.getElementById("mainBalance").innerHTML =
-"₦" + mainBalance.toLocaleString();
-
-alert("You earned ₦" + amount);
-
-}
-
-function activateAccount(){
-
-alert("Activate using payment gateway (Paystack / Flutterwave).");
-
-}
-
-function toggleWithdrawal(){
-
-withdrawalOpen = !withdrawalOpen;
-
-let status = document.getElementById("withdrawStatus");
-
-if(withdrawalOpen){
-status.innerHTML = "OPEN";
-status.style.color = "#60a5fa";
-}else{
-status.innerHTML = "CLOSED";
-status.style.color = "red";
-}
-
-}
-
-function withdrawMoney(){
-
-if(!withdrawalOpen){
-alert("Withdrawal is currently closed.");
-return;
-}
-
-alert("Withdrawal request submitted.");
-}
-
-function placeAds(){
-window.location.href = "t.me/DANI_TECH01";
-}
-
-</script></body> <div class="section">
-  <h2>Create Account</h2>
-
-  <input id="username" placeholder="Username" style="width:100%;padding:10px;margin-top:10px;">
-  <input id="email" placeholder="Email" style="width:100%;padding:10px;margin-top:10px;">
-  <input id="password" type="password" placeholder="Password" style="width:100%;padding:10px;margin-top:10px;">
-
-  <button onclick="signup()" style="margin-top:15px;padding:12px;width:100%;background:#0b6a4a;color:white;border:none;border-radius:10px;">
-    Sign Up
-  </button>
-
-  <p id="signupMsg" style="margin-top:10px;color:green;"></p>
-</div> <h2 style="color:green;">Firebase is loading...</h2> <!-- Firebase SDK (CDN version for HTML sites) -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // Your Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBv1SXWPb74YrhY-LDyFKZ8rMeTeXfYHHM",
-    authDomain: "my-main-pre-website.firebaseapp.com",
-    projectId: "my-main-pre-website",
-    storageBucket: "my-main-pre-website.appspot.com",
-    messagingSenderId: "700263761679",
-    appId: "1:700263761679:web:f5eb1dec9e63a52465e07a"
-  };
+const firebaseConfig = {
+apiKey: "AIzaSyBv1SXWPb74YrhY-LDyFKZ8rMeTeXfYHHM",
+authDomain: "my-main-pre-website.firebaseapp.com",
+projectId: "my-main-pre-website",
+storageBucket: "my-main-pre-website.appspot.com",
+messagingSenderId: "700263761679",
+appId: "1:700263761679:web:f5eb1dec9e63a52465e07a"
+};
 
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-  console.log("Firebase connected successfully ✔");
-</script> function signup() {
-  const username = document.getElementById("username").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+function signup(){
+const username = document.getElementById("username").value;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+const msg = document.getElementById("signupMsg");
 
-  const msg = document.getElementById("signupMsg");
+if(!username || !email || !password){
+msg.innerText="Fill all fields";
+msg.style.color="red";
+return;
+}
 
-  if (!username || !email || !password) {
-    msg.style.color = "red";
-    msg.innerText = "Fill all fields";
-    return;
-  }
+auth.createUserWithEmailAndPassword(email,password)
+.then(user=>{
+return db.collection("users").doc(user.user.uid).set({
+username,
+email,
+balance:0,
+taskWallet:0,
+affiliateWallet:0,
+referralCode:username
+});
+})
+.then(()=>{
+msg.style.color="green";
+msg.innerText="Account created ✔";
 
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
+document.getElementById("displayName").innerText=username;
 
-      // Save user data in Firestore
-      return db.collection("users").doc(user.uid).set({
-        username: username,
-        email: email,
-        balance: 0,
-        affiliateWallet: 0,
-        taskWallet: 0,
-        referralCode: username,
-        createdAt: new Date()
-      });
-    })
-    .then(() => {
-      msg.style.color = "green";
-      msg.innerText = "Account created successfully ✔";
-
-      // generate referral link
-      document.getElementById("signupMsg").innerHTML =
-        "Your referral link: https://fortunearners.netlify.app/signup?ref=" +
-        document.getElementById("username").value;
-    })
-    .catch((error) => {
-      msg.style.color = "red";
-      msg.innerText = error.message;
-    });
+msg.innerHTML =
+"Referral: https://fortunearners.netlify.app/signup?ref="+username;
+})
+.catch(err=>{
+msg.style.color="red";
+msg.innerText=err.message;
+});
 }
 </script>
+
+</body>
 </html>
