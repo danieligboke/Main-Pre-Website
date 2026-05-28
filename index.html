@@ -6,152 +6,72 @@
 <title>FORTUNE EARNERS</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
-
 body{
+font-family:Arial;
+margin:0;
 background:#f3f3f3;
-color:#111;
-padding-bottom:100px;
+padding:20px;
 }
 
-.header{
-background:white;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
-
-.logo{
-width:45px;height:45px;border-radius:50%;
-background:#dff7eb;
-display:flex;align-items:center;justify-content:center;
-font-weight:bold;color:#004d37;
-}
-
-.container{padding:15px;}
-
-.section{
+.box{
 background:white;
 padding:20px;
-border-radius:20px;
-margin-top:20px;
+border-radius:15px;
+margin-bottom:15px;
 }
 
-.card{
-background:#1e3a8a;
-border-radius:25px;
-padding:20px;
-color:white;
-margin-bottom:20px;
-}
-
-.balance-box{
-background:#60a5fa;
-color:#000;
-padding:20px;
-border-radius:20px;
-margin-bottom:20px;
-}
-
-.balance{font-size:35px;font-weight:bold;margin-top:10px;}
-
-.withdraw{
-margin-top:15px;
-background:#1e3a8a;
-color:white;
-border:none;
-padding:12px 25px;
-border-radius:30px;
-cursor:pointer;
-}
-
-.task button{
-background:#2563eb;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:10px;
-cursor:pointer;
-}
-
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
+input{
 width:100%;
-background:white;
-display:flex;
-justify-content:space-around;
+padding:10px;
+margin-top:10px;
+border:1px solid #ccc;
+border-radius:8px;
+}
+
+button{
+width:100%;
 padding:12px;
-box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:#1e3a8a;
+color:white;
+cursor:pointer;
+}
+
+#status{
+margin-top:10px;
+font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-<div class="logo">FE</div>
-<h3>FORTUNE EARNERS</h3>
+<h2>FORTUNE EARNERS (Phase 1)</h2>
+
+<div id="authBox" class="box">
+
+<h3>Sign Up</h3>
+<input id="username" placeholder="Username">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="signup()">Create Account</button>
+
+<hr>
+
+<h3>Login</h3>
+<input id="loginEmail" placeholder="Email">
+<input id="loginPassword" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<p id="status"></p>
 </div>
 
-<!-- AUTH -->
-<div id="authSection" class="container">
-
-<div class="section">
-<h2>Create Account</h2>
-
-<input id="username" placeholder="Username" style="width:100%;padding:10px;margin-top:10px;">
-<input id="email" placeholder="Email" style="width:100%;padding:10px;margin-top:10px;">
-<input id="password" type="password" placeholder="Password" style="width:100%;padding:10px;margin-top:10px;">
-
-<button onclick="signup()" style="margin-top:15px;width:100%;padding:12px;background:#0b6a4a;color:white;border:none;border-radius:10px;">
-Sign Up
-</button>
-
-<p id="signupMsg"></p>
-</div>
-
-<div class="section">
-<h2>Login</h2>
-
-<input id="loginEmail" placeholder="Email" style="width:100%;padding:10px;margin-top:10px;">
-<input id="loginPassword" type="password" placeholder="Password" style="width:100%;padding:10px;margin-top:10px;">
-
-<button onclick="login()" style="margin-top:15px;width:100%;padding:12px;background:#2563eb;color:white;border:none;border-radius:10px;">
-Login
-</button>
-</div>
-
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboardSection" class="container" style="display:none;">
-
-<div class="card">
-<h2>Welcome</h2>
-<h1 id="displayName">User</h1>
-
-<div class="balance-box">
-<p>Total Balance</p>
-<div class="balance" id="mainBalance">₦0</div>
-<button class="withdraw" onclick="withdrawMoney()">Withdraw</button>
-</div>
-
-<div class="section">
-<h2>Tasks</h2>
-
-<button onclick="earn(100)">Earn ₦100</button>
-<button onclick="earn(200)">Earn ₦200</button>
-</div>
-
-<button onclick="logout()" style="margin-top:15px;background:red;color:white;padding:10px;border:none;width:100%;">
-Logout
-</button>
-</div>
-
+<div id="userBox" class="box" style="display:none;">
+<h3>Welcome</h3>
+<p id="userInfo"></p>
+<button onclick="logout()">Logout</button>
 </div>
 
 <!-- FIREBASE -->
@@ -160,16 +80,13 @@ Logout
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
-/* SAFE INIT */
-window.addEventListener("load", function(){
-
 firebase.initializeApp({
-apiKey:"AIzaSyBv1SXWPb74YrhY-LDyFKZ8rMeTeXfYHHM",
-authDomain:"my-main-pre-website.firebaseapp.com",
-projectId:"my-main-pre-website",
-storageBucket:"my-main-pre-website.appspot.com",
-messagingSenderId:"700263761679",
-appId:"1:700263761679:web:f5eb1dec9e63a52465e07a"
+apiKey: "AIzaSyBv1SXWPb74YrhY-LDyFKZ8rMeTeXfYHHM",
+authDomain: "my-main-pre-website.firebaseapp.com",
+projectId: "my-main-pre-website",
+storageBucket: "my-main-pre-website.appspot.com",
+messagingSenderId: "700263761679",
+appId: "1:700263761679:web:f5eb1dec9e63a52465e07a"
 });
 
 const auth = firebase.auth();
@@ -178,71 +95,67 @@ const db = firebase.firestore();
 /* AUTH STATE */
 auth.onAuthStateChanged(async user=>{
 if(user){
-const doc = await db.collection("users").doc(user.uid).get();
-const data = doc.data();
+let doc = await db.collection("users").doc(user.uid).get();
+let data = doc.data();
 
-document.getElementById("authSection").style.display="none";
-document.getElementById("dashboardSection").style.display="block";
+document.getElementById("authBox").style.display="none";
+document.getElementById("userBox").style.display="block";
 
-document.getElementById("displayName").innerText = data?.username || "User";
-document.getElementById("mainBalance").innerText = "₦"+(data?.balance||0);
+document.getElementById("userInfo").innerHTML =
+"Username: " + data.username + "<br>Email: " + data.email;
+
 }else{
-document.getElementById("authSection").style.display="block";
-document.getElementById("dashboardSection").style.display="none";
+document.getElementById("authBox").style.display="block";
+document.getElementById("userBox").style.display="none";
 }
 });
 
 /* SIGNUP */
-window.signup = function(){
+function signup(){
 let username=document.getElementById("username").value;
 let email=document.getElementById("email").value;
 let password=document.getElementById("password").value;
 
+let status=document.getElementById("status");
+
 auth.createUserWithEmailAndPassword(email,password)
 .then(res=>{
 return db.collection("users").doc(res.user.uid).set({
-username,email,balance:0
+username: username,
+email: email,
+balance: 0,
+taskWallet: 0,
+affiliateWallet: 0,
+plan: "none",
+referralCode: username,
+createdAt: new Date()
 });
 })
+.then(()=>{
+status.style.color="green";
+status.innerText="Account created successfully ✔";
+})
 .catch(err=>{
-document.getElementById("signupMsg").innerText=err.message;
+status.style.color="red";
+status.innerText=err.message;
 });
 }
 
 /* LOGIN */
-window.login = function(){
+function login(){
 let email=document.getElementById("loginEmail").value;
 let password=document.getElementById("loginPassword").value;
 
 auth.signInWithEmailAndPassword(email,password)
-.catch(err=>alert(err.message));
+.catch(err=>{
+document.getElementById("status").innerText=err.message;
+});
 }
 
 /* LOGOUT */
-window.logout = function(){
+function logout(){
 auth.signOut();
 }
-
-/* EARN */
-window.earn = function(amount){
-let user=auth.currentUser;
-if(!user)return;
-
-let ref=db.collection("users").doc(user.uid);
-
-ref.get().then(doc=>{
-let bal=doc.data().balance||0;
-ref.update({balance:bal+amount});
-document.getElementById("mainBalance").innerText="₦"+(bal+amount);
-});
-}
-
-window.withdrawMoney = function(){
-alert("Withdrawal coming soon");
-}
-
-});
-
 </script>
 
 </body>
