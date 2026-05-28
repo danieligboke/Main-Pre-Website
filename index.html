@@ -6,12 +6,7 @@
 <title>FORTUNE EARNERS</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
 
 body{
 background:#f3f3f3;
@@ -29,22 +24,14 @@ box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
 
 .logo{
-width:45px;
-height:45px;
-border-radius:50%;
+width:45px;height:45px;border-radius:50%;
 background:#dff7eb;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-color:#004d37;
+display:flex;align-items:center;justify-content:center;
+font-weight:bold;color:#004d37;
 }
 
-.container{
-padding:15px;
-}
+.container{padding:15px;}
 
-/* AUTH */
 .section{
 background:white;
 padding:20px;
@@ -52,28 +39,12 @@ border-radius:20px;
 margin-top:20px;
 }
 
-/* YOUR ORIGINAL UI KEPT */
 .card{
 background:#1e3a8a;
 border-radius:25px;
 padding:20px;
 color:white;
 margin-bottom:20px;
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-}
-
-.plan{
-background:#60a5fa;
-color:#000;
-padding:10px 18px;
-border-radius:30px;
-font-weight:bold;
 }
 
 .balance-box{
@@ -84,11 +55,7 @@ border-radius:20px;
 margin-bottom:20px;
 }
 
-.balance{
-font-size:35px;
-font-weight:bold;
-margin-top:10px;
-}
+.balance{font-size:35px;font-weight:bold;margin-top:10px;}
 
 .withdraw{
 margin-top:15px;
@@ -98,38 +65,6 @@ border:none;
 padding:12px 25px;
 border-radius:30px;
 cursor:pointer;
-}
-
-.stats{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-}
-
-.small-card{
-background:#2563eb;
-padding:20px;
-border-radius:20px;
-color:white;
-}
-
-.ref-box{
-background:#2563eb;
-padding:15px;
-border-radius:20px;
-margin-top:15px;
-word-break:break-word;
-color:white;
-}
-
-.task{
-background:white;
-padding:15px;
-border-radius:15px;
-margin-bottom:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
 }
 
 .task button{
@@ -150,4 +85,165 @@ background:white;
 display:flex;
 justify-content:space-around;
 padding:12px;
-box-shadow:0 -2px 10px rgba(0,
+box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<div class="logo">FE</div>
+<h3>FORTUNE EARNERS</h3>
+</div>
+
+<!-- AUTH -->
+<div id="authSection" class="container">
+
+<div class="section">
+<h2>Create Account</h2>
+
+<input id="username" placeholder="Username" style="width:100%;padding:10px;margin-top:10px;">
+<input id="email" placeholder="Email" style="width:100%;padding:10px;margin-top:10px;">
+<input id="password" type="password" placeholder="Password" style="width:100%;padding:10px;margin-top:10px;">
+
+<button onclick="signup()" style="margin-top:15px;width:100%;padding:12px;background:#0b6a4a;color:white;border:none;border-radius:10px;">
+Sign Up
+</button>
+
+<p id="signupMsg"></p>
+</div>
+
+<div class="section">
+<h2>Login</h2>
+
+<input id="loginEmail" placeholder="Email" style="width:100%;padding:10px;margin-top:10px;">
+<input id="loginPassword" type="password" placeholder="Password" style="width:100%;padding:10px;margin-top:10px;">
+
+<button onclick="login()" style="margin-top:15px;width:100%;padding:12px;background:#2563eb;color:white;border:none;border-radius:10px;">
+Login
+</button>
+</div>
+
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboardSection" class="container" style="display:none;">
+
+<div class="card">
+<h2>Welcome</h2>
+<h1 id="displayName">User</h1>
+
+<div class="balance-box">
+<p>Total Balance</p>
+<div class="balance" id="mainBalance">₦0</div>
+<button class="withdraw" onclick="withdrawMoney()">Withdraw</button>
+</div>
+
+<div class="section">
+<h2>Tasks</h2>
+
+<button onclick="earn(100)">Earn ₦100</button>
+<button onclick="earn(200)">Earn ₦200</button>
+</div>
+
+<button onclick="logout()" style="margin-top:15px;background:red;color:white;padding:10px;border:none;width:100%;">
+Logout
+</button>
+</div>
+
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* SAFE INIT */
+window.addEventListener("load", function(){
+
+firebase.initializeApp({
+apiKey:"AIzaSyBv1SXWPb74YrhY-LDyFKZ8rMeTeXfYHHM",
+authDomain:"my-main-pre-website.firebaseapp.com",
+projectId:"my-main-pre-website",
+storageBucket:"my-main-pre-website.appspot.com",
+messagingSenderId:"700263761679",
+appId:"1:700263761679:web:f5eb1dec9e63a52465e07a"
+});
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* AUTH STATE */
+auth.onAuthStateChanged(async user=>{
+if(user){
+const doc = await db.collection("users").doc(user.uid).get();
+const data = doc.data();
+
+document.getElementById("authSection").style.display="none";
+document.getElementById("dashboardSection").style.display="block";
+
+document.getElementById("displayName").innerText = data?.username || "User";
+document.getElementById("mainBalance").innerText = "₦"+(data?.balance||0);
+}else{
+document.getElementById("authSection").style.display="block";
+document.getElementById("dashboardSection").style.display="none";
+}
+});
+
+/* SIGNUP */
+window.signup = function(){
+let username=document.getElementById("username").value;
+let email=document.getElementById("email").value;
+let password=document.getElementById("password").value;
+
+auth.createUserWithEmailAndPassword(email,password)
+.then(res=>{
+return db.collection("users").doc(res.user.uid).set({
+username,email,balance:0
+});
+})
+.catch(err=>{
+document.getElementById("signupMsg").innerText=err.message;
+});
+}
+
+/* LOGIN */
+window.login = function(){
+let email=document.getElementById("loginEmail").value;
+let password=document.getElementById("loginPassword").value;
+
+auth.signInWithEmailAndPassword(email,password)
+.catch(err=>alert(err.message));
+}
+
+/* LOGOUT */
+window.logout = function(){
+auth.signOut();
+}
+
+/* EARN */
+window.earn = function(amount){
+let user=auth.currentUser;
+if(!user)return;
+
+let ref=db.collection("users").doc(user.uid);
+
+ref.get().then(doc=>{
+let bal=doc.data().balance||0;
+ref.update({balance:bal+amount});
+document.getElementById("mainBalance").innerText="₦"+(bal+amount);
+});
+}
+
+window.withdrawMoney = function(){
+alert("Withdrawal coming soon");
+}
+
+});
+
+</script>
+
+</body>
+</html>
