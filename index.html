@@ -7,25 +7,64 @@
 
 <style>
 body{
-font-family:Arial;
 margin:0;
-background:#f3f3f3;
-padding:20px;
+font-family:Arial;
+background:#f4f6fb;
 }
 
-.box{
+/* TOP BAR */
+.topbar{
+background:#1e3a8a;
+color:white;
+padding:15px;
+display:flex;
+align-items:center;
+}
+
+.menu-btn{
+font-size:26px;
+cursor:pointer;
+margin-right:15px;
+}
+
+/* SIDE MENU */
+.sidemenu{
+position:fixed;
+top:0;
+left:-260px;
+width:260px;
+height:100%;
+background:#0f172a;
+color:white;
+padding-top:20px;
+transition:0.3s;
+z-index:1000;
+}
+
+.sidemenu a{
+display:block;
+padding:12px;
+color:white;
+text-decoration:none;
+border-bottom:1px solid #1e293b;
+cursor:pointer;
+}
+
+.sidemenu a:hover{
+background:#1e3a8a;
+}
+
+/* MAIN */
+.container{
+padding:15px;
+}
+
+.card{
 background:white;
-padding:20px;
-border-radius:15px;
-margin-bottom:15px;
-}
-
-input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border:1px solid #ccc;
-border-radius:8px;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
 button{
@@ -39,61 +78,127 @@ color:white;
 cursor:pointer;
 }
 
-#status{
-margin-top:10px;
-font-weight:bold;
+input{
+width:100%;
+padding:10px;
+margin-top:8px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.small{
+font-size:13px;
+color:#555;
+}
+
+.locked{
+opacity:0.5;
+pointer-events:none;
 }
 </style>
 </head>
 
 <body>
 
-<h2>F̋ŐR̋T̋ŰN̋E̋ E̋A̋R̋N̋E̋R̋S̋</h2>
+<!-- SIDE MENU -->
+<div id="menu" class="sidemenu">
+<h3 style="padding-left:12px;">Menu</h3>
 
-<!-- AUTH -->
-<div id="authBox" class="box">
-<h3>Sign Up</h3>
-<input id="username" placeholder="Username">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="signup()">Create Account</button>
+<a onclick="showSection('home')">Home</a>
+<a onclick="showSection('tasks')">Daily Tasks</a>
+<a onclick="showSection('ads')">Sponsored Ads</a>
+<a onclick="showSection('plans')">Activate A Plan</a>
+<a onclick="showSection('wallet')">Wallet Balance</a>
+<a onclick="showSection('ref')">Referrals</a>
+<a onclick="showSection('adsbiz')">Place Ads</a>
+<a onclick="showSection('about')">About</a>
+<a onclick="showSection('support')">Contact Support</a>
+<a onclick="logout()">Logout</a>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+<h3>FORTUNE EARNERS</h3>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+<!-- HOME -->
+<div id="home" class="card">
+<h3>Dashboard</h3>
+<p><b>Username:</b> <span id="username">-</span></p>
+<p><b>Plan:</b> <span id="plan">-</span></p>
+
+<p><b>Task Wallet:</b> ₦<span id="taskWallet">0</span></p>
+<p><b>Affiliate Wallet:</b> ₦<span id="affiliateWallet">0</span></p>
+<p><b>Total:</b> ₦<span id="totalWallet">0</span></p>
 
 <hr>
 
-<h3>Login</h3>
-<input id="loginEmail" placeholder="Email">
-<input id="loginPassword" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-
-<p id="status"></p>
-</div>
-
-<!-- USER -->
-<div id="userBox" class="box" style="display:none;">
-<h3>Welcome</h3>
-<p id="userInfo"></p>
-<button onclick="logout()">Logout</button>
-</div>
-
-<!-- PLANS -->
-<div id="plansBox" class="box" style="display:none;">
-<h3>Activate Plan</h3>
-
-<button onclick="activatePlan('NEWBIE',750,400)">NEWBIE PLAN — ₦750</button>
-<button onclick="activatePlan('SILVER',1500,700)">SILVER PLAN — ₦1,500</button>
-<button onclick="activatePlan('GOLD',3000,1050)">GOLD PLAN — ₦3,000</button>
-<button onclick="activatePlan('DIAMOND',5000,2100)">DIAMOND PLAN — ₦5,000</button>
-<button onclick="activatePlan('PREMIUM',7000,3300)">PREMIUM PLAN — ₦7,000</button>
+<p><b>Your Referral Link:</b></p>
+<input id="refLink" readonly>
+<button onclick="copyRef()">Copy Link</button>
 </div>
 
 <!-- TASKS -->
-<div id="tasksBox" class="box" style="display:none;">
+<div id="tasks" class="card">
 <h3>Daily Tasks</h3>
-
+<p class="small">Complete tasks to earn daily rewards</p>
 <button onclick="completeTask()">Perform Task</button>
-<button onclick="watchSponsoredAd()">Watch Sponsored Ad</button>
+</div>
 
-<p id="taskStatus"></p>
+<!-- ADS -->
+<div id="ads" class="card">
+<h3>Sponsored Ads</h3>
+<p class="small">Watch ads and earn rewards</p>
+<button onclick="watchSponsoredAd()">Watch Ad</button>
+</div>
+
+<!-- PLANS -->
+<div id="plans" class="card">
+<h3>Activate A Plan</h3>
+
+<button onclick="activatePlan('NEWBIE',750,400)">NEWBIE - ₦750</button>
+<button onclick="activatePlan('SILVER',1500,700)">SILVER - ₦1,500</button>
+<button onclick="activatePlan('GOLD',3000,1050)">GOLD - ₦3,000</button>
+<button onclick="activatePlan('DIAMOND',5000,2100)">DIAMOND - ₦5,000</button>
+<button onclick="activatePlan('PREMIUM',7000,3300)">PREMIUM - ₦7,000</button>
+</div>
+
+<!-- WALLET -->
+<div id="wallet" class="card">
+<h3>Wallet Balance</h3>
+<p>Task: ₦<span id="taskWallet2">0</span></p>
+<p>Affiliate: ₦<span id="affiliateWallet2">0</span></p>
+</div>
+
+<!-- REF -->
+<div id="ref" class="card">
+<h3>Referrals</h3>
+<p>Your referral link is already shown on dashboard</p>
+</div>
+
+<!-- PLACE ADS -->
+<div id="adsbiz" class="card">
+<h3>Place Ads</h3>
+<p>Promote your business and reach thousands of active users across the platform instantly 🚀</p>
+<p><b>Contact:</b> t.me/Dani_Tech01</p>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="card">
+<h3>About FORTUNE EARNERS</h3>
+<p>Earn by completing tasks, watching ads, and referring users.</p>
+</div>
+
+<!-- SUPPORT -->
+<div id="support" class="card">
+<h3>Contact Support</h3>
+<p>t.me/Dani_Tech01</p>
+</div>
+
 </div>
 
 <!-- FIREBASE -->
@@ -103,200 +208,120 @@ font-weight:bold;
 
 <script>
 firebase.initializeApp({
-apiKey: "AIzaSyBv1SXWPb74YrhY-LDyFKZ8rMeTeXfYHHM",
-authDomain: "my-main-pre-website.firebaseapp.com",
-projectId: "my-main-pre-website",
-storageBucket: "my-main-pre-website.appspot.com",
-messagingSenderId: "700263761679",
-appId: "1:700263761679:web:f5eb1dec9e63a52465e07a"
+apiKey: "YOUR_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_PROJECT"
 });
 
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* AUTH STATE */
-auth.onAuthStateChanged(async user => {
-if(user){
+let userData = null;
+
+/* MENU */
+function toggleMenu(){
+let m = document.getElementById("menu");
+m.style.left = (m.style.left === "0px") ? "-260px" : "0px";
+}
+
+function showSection(id){
+document.querySelectorAll(".card").forEach(c=>c.style.display="none");
+document.getElementById(id).style.display="block";
+toggleMenu();
+}
+
+/* AUTH */
+auth.onAuthStateChanged(async user=>{
+if(!user) return;
 
 let doc = await db.collection("users").doc(user.uid).get();
-let data = doc.data();
+userData = doc.data();
 
-document.getElementById("authBox").style.display="none";
-document.getElementById("userBox").style.display="block";
-document.getElementById("userInfo").innerHTML =
-"Username: " + data.username + "<br>Email: " + data.email;
+document.getElementById("username").innerText = userData.username;
+document.getElementById("plan").innerText = userData.plan;
 
-/* PLAN GATE */
-document.getElementById("plansBox").style.display="block";
+let total = (userData.taskWallet||0)+(userData.affiliateWallet||0);
 
-if(data.plan && data.plan !== "none"){
-document.getElementById("tasksBox").style.display="block";
-}else{
-document.getElementById("tasksBox").style.display="none";
+document.getElementById("taskWallet").innerText = userData.taskWallet||0;
+document.getElementById("affiliateWallet").innerText = userData.affiliateWallet||0;
+document.getElementById("totalWallet").innerText = total;
+
+document.getElementById("taskWallet2").innerText = userData.taskWallet||0;
+document.getElementById("affiliateWallet2").innerText = userData.affiliateWallet||0;
+
+document.getElementById("refLink").value =
+"https://fortunearners.netlify.app/signup?ref="+userData.username;
+
+/* LOCK SYSTEM */
+if(userData.plan === "none"){
+document.getElementById("tasks").classList.add("locked");
+document.getElementById("ads").classList.add("locked");
+}
+});
+
+/* COPY REF */
+function copyRef(){
+let r = document.getElementById("refLink");
+r.select();
+document.execCommand("copy");
+alert("Copied!");
 }
 
-}else{
-document.getElementById("authBox").style.display="block";
-document.getElementById("userBox").style.display="none";
-document.getElementById("plansBox").style.display="none";
-document.getElementById("tasksBox").style.display="none";
-}
-});
+/* PLAN */
+async function activatePlan(plan, amount, bonus){
 
-/* SIGNUP */
-function signup(){
-let username=document.getElementById("username").value;
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
-let status=document.getElementById("status");
+let user = auth.currentUser;
+let ref = db.collection("users").doc(user.uid);
+let data = (await ref.get()).data();
 
-const urlParams = new URLSearchParams(window.location.search);
-const ref = urlParams.get("ref");
+await ref.update({plan});
 
-auth.createUserWithEmailAndPassword(email,password)
-.then(res=>{
-return db.collection("users").doc(res.user.uid).set({
-username,
-email,
-balance: 0,
-taskWallet: 0,
-affiliateWallet: 0,
-plan: "none",
-referredBy: ref || null,
-createdAt: new Date()
-});
-})
-.then(()=>{
-status.style.color="green";
-status.innerText="Account created successfully ✔";
-})
-.catch(err=>{
-status.style.color="red";
-status.innerText=err.message;
+if(data.referredBy){
+let q = await db.collection("users").where("username","==",data.referredBy).get();
+if(!q.empty){
+q.docs[0].ref.update({
+affiliateWallet: firebase.firestore.FieldValue.increment(bonus)
 });
 }
+}
 
-/* LOGIN */
-function login(){
-let email=document.getElementById("loginEmail").value;
-let password=document.getElementById("loginPassword").value;
+alert(plan+" activated");
+}
 
-auth.signInWithEmailAndPassword(email,password)
-.catch(err=>{
-document.getElementById("status").innerText=err.message;
+/* TASK */
+async function completeTask(){
+if(!userData || userData.plan==="none"){
+alert("Activate plan first");
+return;
+}
+
+let reward = 100;
+await db.collection("users").doc(auth.currentUser.uid).update({
+taskWallet: firebase.firestore.FieldValue.increment(reward)
 });
+
+alert("Task completed +₦"+reward);
+}
+
+/* ADS */
+async function watchSponsoredAd(){
+if(!userData || userData.plan==="none"){
+alert("Activate plan first");
+return;
+}
+
+let reward = 200;
+await db.collection("users").doc(auth.currentUser.uid).update({
+taskWallet: firebase.firestore.FieldValue.increment(reward)
+});
+
+alert("Ad watched +₦"+reward);
 }
 
 /* LOGOUT */
 function logout(){
 auth.signOut();
 }
-
-/* ACTIVATE PLAN */
-async function activatePlan(planName,planAmount,refBonus){
-
-const user = auth.currentUser;
-if(!user){ alert("Login first"); return; }
-
-const userRef = db.collection("users").doc(user.uid);
-const doc = await userRef.get();
-const data = doc.data();
-
-/* update plan */
-await userRef.update({ plan: planName });
-
-/* referral reward (safe) */
-if(data.referredBy){
-const query = await db.collection("users")
-.where("username","==",data.referredBy)
-.get();
-
-if(!query.empty){
-let refDoc = query.docs[0];
-
-await refDoc.ref.update({
-affiliateWallet: firebase.firestore.FieldValue.increment(refBonus)
-});
-}
-}
-
-alert(planName + " activated ✔");
-}
-
-/* TASK */
-async function completeTask(){
-
-const user = auth.currentUser;
-if(!user){ alert("Login first"); return; }
-
-const userRef = db.collection("users").doc(user.uid);
-const doc = await userRef.get();
-const data = doc.data();
-
-/* BLOCK IF NO PLAN */
-if(data.plan === "none"){
-alert("Activate a plan to access tasks");
-return;
-}
-
-let reward = 0;
-
-switch(data.plan){
-case "NEWBIE": reward = 100; break;
-case "SILVER": reward = 150; break;
-case "GOLD": reward = 200; break;
-case "DIAMOND": reward = 250; break;
-case "PREMIUM": reward = 300; break;
-default:
-alert("Invalid plan");
-return;
-}
-
-await userRef.update({
-taskWallet: firebase.firestore.FieldValue.increment(reward)
-});
-
-document.getElementById("taskStatus").innerText =
-"Task completed ✔ Earned ₦" + reward;
-}
-
-/* ADS */
-async function watchSponsoredAd(){
-
-const user = auth.currentUser;
-if(!user){ alert("Login first"); return; }
-
-const userRef = db.collection("users").doc(user.uid);
-const doc = await userRef.get();
-const data = doc.data();
-
-/* BLOCK IF NO PLAN */
-if(data.plan === "none"){
-alert("Activate a plan to access ads");
-return;
-}
-
-let reward = 0;
-
-switch(data.plan){
-case "NEWBIE": reward = 200; break;
-case "SILVER": reward = 300; break;
-case "GOLD": reward = 400; break;
-case "DIAMOND": reward = 500; break;
-case "PREMIUM": reward = 600; break;
-default:
-alert("Invalid plan");
-return;
-}
-
-await userRef.update({
-taskWallet: firebase.firestore.FieldValue.increment(reward)
-});
-
-document.getElementById("taskStatus").innerText =
-"Sponsored Ad ✔ Earned ₦" + reward;
-}
-
 </script>
 
 </body>
