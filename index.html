@@ -46,7 +46,21 @@ font-weight:bold;
 </style>
 </head>
 
-<body> <div id="plansBox" class="box" style="display:none;">
+<body> <div id="plansBox" class="box" style="display:none;"> <div id="tasksBox" class="box" style="display:none;">
+
+<h3>Daily Tasks</h3>
+
+<button onclick="completeTask()">
+Perform Task
+</button>
+
+<button onclick="watchSponsoredAd()">
+Watch Sponsored Ad
+</button>
+
+<p id="taskStatus"></p>
+
+</div>
 
 <h3>Activate Plan</h3>
 
@@ -72,7 +86,7 @@ PREMIUM PLAN — ₦7,000
 
 </div>
 
-<h2>FORTUNE EARNERS</h2>
+<h2>F̋ŐR̋T̋ŰN̋E̋ E̋A̋R̋N̋E̋R̋S̋</h2>
 
 <div id="authBox" class="box">
 
@@ -118,7 +132,8 @@ const db = firebase.firestore();
 
 /* AUTH STATE */
 auth.onAuthStateChanged(async user=>{
-if(user){document.getElementById("plansBox").style.display="block";
+if(user){document.getElementById("tasksBox").style.display="block";
+document.getElementById("plansBox").style.display="block";
 let doc = await db.collection("users").doc(user.uid).get();
 let data = doc.data();
 
