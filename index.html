@@ -8,15 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
-        // Custom Tailwind configurations for your branding colors
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brandBlue: '#0A192F',       // Deep base blue background
-                        brandBlueCard: '#112240',   // Structured inner panels
-                        brandYellow: '#FACC15',     // Primary accent yellow
-                        brandPink: '#EC4899',       // Secondary accent pink
+                        brandBlue: '#0A192F',       
+                        brandBlueCard: '#112240',   
+                        brandYellow: '#FACC15',     
+                        brandPink: '#EC4899',       
                     }
                 }
             }
@@ -29,10 +28,10 @@
 </head>
 <body class="bg-brandBlue text-gray-100 font-sans antialiased pb-24">
 
-    <div id="loading-screen" class="fixed inset-0 z-[100] bg-brandBlue flex flex-col items-center justify-center">
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-brandBlue flex flex-col items-center justify-center transition-all duration-500">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brandYellow mb-4"></div>
-        <p class="text-sm font-semibold tracking-wider text-gray-400">LOADING FORTUNE EARNERS...</p>
-        <p id="loading-fallback-text" class="text-xs text-gray-500 mt-2 hidden">Bypassing connection lag...</p>
+        <p class="text-sm font-semibold tracking-wider text-gray-400 uppercase">Loading Fortune Earners...</p>
+        <p id="loading-fallback-text" class="text-xs text-brandPink mt-3 font-medium opacity-80 animate-pulse hidden">Bypassing connection lag...</p>
     </div>
 
     <div id="auth-container" class="min-h-screen flex items-center justify-center px-4 py-12">
@@ -42,14 +41,14 @@
                 <h2 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</h2>
                 <p class="text-xs text-gray-400 mt-1">Sign in to manage your daily workspace</p>
             </div>
-            <form id="signin-form" class="space-y-4">
+            <form id="signin-form" onsubmit="event.preventDefault(); bypassAuthToApp();" class="space-y-4">
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Email Address</label>
-                    <input type="email" id="signin-email" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                    <input type="email" id="signin-email" value="demo@fortunearners.com" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Security Password</label>
-                    <input type="password" id="signin-password" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                    <input type="password" id="signin-password" value="password123" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
                 </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-brandYellow to-yellow-500 text-brandBlue font-extrabold py-3.5 rounded-xl shadow-md transition transform active:scale-95 text-sm uppercase tracking-wider">
                     Sign In Account
@@ -66,18 +65,18 @@
                 <h2 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</h2>
                 <p class="text-xs text-gray-400 mt-1">Create your automated earning gateway</p>
             </div>
-            <form id="signup-form" class="space-y-4">
+            <form id="signup-form" onsubmit="event.preventDefault(); bypassAuthToApp();" class="space-y-4">
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Full Name</label>
-                    <input type="text" id="signup-fullname" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                    <input type="text" id="signup-fullname" placeholder="John Doe" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Username</label>
-                    <input type="text" id="signup-username" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                    <input type="text" id="signup-username" placeholder="coachdaniel" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Email Address</label>
-                    <input type="email" id="signup-email" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                    <input type="email" id="signup-email" placeholder="name@domain.com" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Security Password</label>
@@ -109,12 +108,12 @@
                 <span class="font-extrabold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</span>
             </div>
             <div class="flex items-center space-x-3">
-                <div class="flex items-center bg-brandBlueCard border border-gray-750 px-2.5 py-1 rounded-full text-xs space-x-1.5">
+                <div class="flex items-center bg-brandBlueCard border border-gray-700 px-2.5 py-1 rounded-full text-xs space-x-1.5">
                     <span class="text-sm">🇳🇬</span>
                     <span class="font-bold text-gray-300">NG</span>
                 </div>
                 <div id="avatar-fallback" class="w-8 h-8 rounded-full bg-brandPink/30 border border-brandPink flex items-center justify-center text-xs font-bold text-brandPink uppercase">
-                    FE
+                    CD
                 </div>
             </div>
         </header>
@@ -157,11 +156,11 @@
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
                             <div id="avatar-initials" class="w-12 h-12 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center text-sm font-black text-brandYellow uppercase">
-                                US
+                                CD
                             </div>
                             <div>
                                 <p class="text-xs text-gray-400">Welcome Back</p>
-                                <h2 id="dyn-dashboard-user" class="text-base font-black text-white">DemoUser</h2>
+                                <h2 id="dyn-dashboard-user" class="text-base font-black text-white">CoachDaniel</h2>
                             </div>
                         </div>
                         <span id="dyn-dashboard-plan" class="bg-brandYellow text-brandBlue font-black text-[10px] px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
@@ -172,7 +171,7 @@
                     <div class="bg-gradient-to-br from-brandYellow to-yellow-400 rounded-2xl p-5 text-brandBlue flex justify-between items-center relative overflow-hidden shadow-lg">
                         <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-brandBlue/5 border-[12px] border-brandBlue/10 pointer-events-none"></div>
                         <div>
-                            <span class="text-xs font-semibold opacity-85 block uppercase tracking-wide">Total Balance</span>
+                            <span class="text-xs font-semibold opacity-85 block uppercase tracking-wide">Account Balance</span>
                             <span class="text-2xl font-black mt-0.5 block">₦<span id="dyn-total-bal">12,000.00</span></span>
                         </div>
                         <button onclick="switchMainView('withdraw')" class="bg-brandBlue hover:bg-brandBlue/90 text-white font-extrabold text-sm px-5 py-2.5 rounded-xl shadow-md transition relative z-10">
@@ -181,18 +180,18 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-brandBlue border border-gray-800 p-3.5 rounded-2xl flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-xl bg-brandPink/10 flex items-center justify-center text-brandPink"><i class="fas fa-users text-sm"></i></div>
+                        <div class="bg-brandBlue border border-gray-800 p-3.5 rounded-2xl flex flex-col justify-between">
+                            <div class="w-8 h-8 rounded-xl bg-brandPink/10 flex items-center justify-center text-brandPink mb-2"><i class="fas fa-users text-xs"></i></div>
                             <div>
-                                <span class="text-base font-black text-brandPink block">₦<span id="dyn-aff-bal">800.00</span></span>
-                                <span class="text-[9px] text-gray-400 uppercase font-medium tracking-wide block">Affiliate</span>
+                                <span class="text-base font-black text-white block">₦<span id="dyn-aff-bal">800.00</span></span>
+                                <span class="text-[10px] text-gray-400 uppercase font-medium tracking-wide block">Affiliate</span>
                             </div>
                         </div>
-                        <div class="bg-brandBlue border border-gray-800 p-3.5 rounded-2xl flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow"><i class="fas fa-wallet text-sm"></i></div>
+                        <div class="bg-brandBlue border border-gray-800 p-3.5 rounded-2xl flex flex-col justify-between">
+                            <div class="w-8 h-8 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-2"><i class="fas fa-wallet text-xs"></i></div>
                             <div>
-                                <span class="text-base font-black text-brandYellow block">₦<span id="dyn-task-bal">11,200.00</span></span>
-                                <span class="text-[9px] text-gray-400 uppercase font-medium tracking-wide block">Task Wallet</span>
+                                <span class="text-base font-black text-white block">₦<span id="dyn-task-bal">11,200.00</span></span>
+                                <span class="text-[10px] text-gray-400 uppercase font-medium tracking-wide block">Tasks Earnings</span>
                             </div>
                         </div>
                     </div>
@@ -200,11 +199,42 @@
                     <div class="bg-brandBlue border border-gray-800 rounded-2xl p-3 flex items-center justify-between">
                         <div class="flex items-center space-x-2.5 overflow-hidden w-full mr-2">
                             <div class="text-brandYellow text-sm"><i class="fas fa-link"></i></div>
-                            <input id="dyn-ref-url" type="text" class="bg-transparent text-xs text-gray-400 w-full focus:outline-none select-all font-mono" readonly value="https://fortunearners.netlify.app/signup?ref=DemoUser">
+                            <input id="dyn-ref-url" type="text" class="bg-transparent text-xs text-gray-300 w-full focus:outline-none select-all font-mono" readonly value="https://rarevault.biz/signup?ref=CoachDaniel">
                         </div>
                         <button onclick="copyReferralLink()" class="w-8 h-8 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition flex-shrink-0">
                             <i class="far fa-copy text-xs"></i>
                         </button>
+                    </div>
+                </div>
+
+                <div class="bg-brandBlueCard border border-gray-800 rounded-3xl p-5 space-y-4 shadow-xl">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-white tracking-wide">Weekly Top Affiliates</h3>
+                        <button class="text-xs text-brandYellow font-semibold flex items-center space-x-1">
+                            <span>View All</span> <i class="fas fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-400 -mt-2">This week winners</p>
+                    
+                    <div class="grid grid-cols-3 gap-2 pt-2 text-center">
+                        <div class="flex flex-col items-center space-y-2">
+                            <span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">₦10,000</span>
+                            <div class="w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden bg-gray-700">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover" alt="Winner 1">
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center space-y-2">
+                            <span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">₦5,000</span>
+                            <div class="w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden bg-gray-700">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover" alt="Winner 2">
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center space-y-2">
+                            <span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">₦3,000</span>
+                            <div class="w-14 h-14 rounded-full border-2 border-blue-500 flex items-center justify-center bg-brandBlue text-gray-400 text-xl">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -220,34 +250,4 @@
                         </div>
                         <span id="dyn-tasks-left-badge" class="text-xs bg-brandBlueCard text-brandYellow px-2.5 py-1 rounded-md border border-gray-750">5 Left</span>
                     </button>
-                    <button onclick="executeSponsoredAd()" class="w-full bg-brandBlue border border-gray-800 py-3.5 px-4 rounded-xl flex items-center justify-between text-sm hover:border-brandPink transition">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-play text-brandPink text-base"></i>
-                            <span class="font-medium text-gray-200">Watch Sponsored Ads Video</span>
-                        </div>
-                        <span id="dyn-ads-left-badge" class="text-[10px] bg-brandPink/10 text-brandPink border border-brandPink/20 px-2 py-0.5 rounded-md font-bold uppercase">1 Daily</span>
-                    </button>
-                </div>
-            </div>
-
-            <div id="view-ads" class="view-section space-y-4">
-                <div class="bg-gradient-to-br from-brandBlueCard to-brandBlue border border-brandYellow/20 rounded-3xl p-6 text-center space-y-4 shadow-xl">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-brandYellow/10 flex items-center justify-center text-brandYellow text-xl shadow-inner"><i class="fas fa-rocket"></i></div>
-                    <div class="space-y-1">
-                        <h2 class="font-black text-lg text-white">Promote Your Business To Thousands Of Users 🚀</h2>
-                        <p class="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed">Reach Thousands Of Users Online Worldwide Via Here Instantly With Native System Ad Space Placement.</p>
-                    </div>
-                    <div class="pt-2">
-                        <a href="https://t.me/Dani_Tech01" target="_blank" class="block w-full bg-gradient-to-r from-brandYellow to-yellow-500 text-brandBlue font-extrabold text-xs py-3.5 rounded-xl shadow-md hover:opacity-95 transition tracking-wider uppercase">Create System Campaign</a>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-withdraw" class="view-section space-y-4">
-                <div id="wd-bank-gate-container" class="bg-brandBlueCard border border-gray-800 rounded-3xl p-5 space-y-4 shadow-xl">
-                    <h2 class="text-sm font-black text-white uppercase tracking-wider flex items-center space-x-2">
-                        <i class="fas fa-wallet text-brandPink"></i><span>Secure Settlement Center</span>
-                    </h2>
-                    
-                    <div id="wd-bank-missing" class="bg-red-500/10 border border-red-500/30 p-4 rounded-2xl text-xs text-red-200 space-y-3">
-                        <p><i class="fas fa-exclamation-triangle mr-1.5 text-brandYellow"></i>You must configure your 
+                    <button onclick="executeSponsoredAd()" class="w-full bg-brandBlue border border-gray-800 py-3
