@@ -46,50 +46,12 @@ font-weight:bold;
 </style>
 </head>
 
-<body> <div id="plansBox" class="box" style="display:none;"> <div id="tasksBox" class="box" style="display:none;">
-
-<h3>Daily Tasks</h3>
-
-<button onclick="completeTask()">
-Perform Task
-</button>
-
-<button onclick="watchSponsoredAd()">
-Watch Sponsored Ad
-</button>
-
-<p id="taskStatus"></p>
-
-</div>
-
-<h3>Activate Plan</h3>
-
-<button onclick="activatePlan('NEWBIE',750,400)">
-NEWBIE PLAN — ₦750
-</button>
-
-<button onclick="activatePlan('SILVER',1500,700)">
-SILVER PLAN — ₦1,500
-</button>
-
-<button onclick="activatePlan('GOLD',3000,1050)">
-GOLD PLAN — ₦3,000
-</button>
-
-<button onclick="activatePlan('DIAMOND',5000,2100)">
-DIAMOND PLAN — ₦5,000
-</button>
-
-<button onclick="activatePlan('PREMIUM',7000,3300)">
-PREMIUM PLAN — ₦7,000
-</button>
-
-</div>
+<body>
 
 <h2>F̋ŐR̋T̋ŰN̋E̋ E̋A̋R̋N̋E̋R̋S̋</h2>
 
+<!-- AUTH -->
 <div id="authBox" class="box">
-
 <h3>Sign Up</h3>
 <input id="username" placeholder="Username">
 <input id="email" placeholder="Email">
@@ -106,10 +68,32 @@ PREMIUM PLAN — ₦7,000
 <p id="status"></p>
 </div>
 
+<!-- USER -->
 <div id="userBox" class="box" style="display:none;">
 <h3>Welcome</h3>
 <p id="userInfo"></p>
 <button onclick="logout()">Logout</button>
+</div>
+
+<!-- PLANS -->
+<div id="plansBox" class="box" style="display:none;">
+<h3>Activate Plan</h3>
+
+<button onclick="activatePlan('NEWBIE',750,400)">NEWBIE PLAN — ₦750</button>
+<button onclick="activatePlan('SILVER',1500,700)">SILVER PLAN — ₦1,500</button>
+<button onclick="activatePlan('GOLD',3000,1050)">GOLD PLAN — ₦3,000</button>
+<button onclick="activatePlan('DIAMOND',5000,2100)">DIAMOND PLAN — ₦5,000</button>
+<button onclick="activatePlan('PREMIUM',7000,3300)">PREMIUM PLAN — ₦7,000</button>
+</div>
+
+<!-- TASKS -->
+<div id="tasksBox" class="box" style="display:none;">
+<h3>Daily Tasks</h3>
+
+<button onclick="completeTask()">Perform Task</button>
+<button onclick="watchSponsoredAd()">Watch Sponsored Ad</button>
+
+<p id="taskStatus"></p>
 </div>
 
 <!-- FIREBASE -->
@@ -131,22 +115,32 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 /* AUTH STATE */
-auth.onAuthStateChanged(async user=>{
-if(user){document.getElementById("tasksBox").style.display="block";
-document.getElementById("plansBox").style.display="block";
+auth.onAuthStateChanged(async user => {
+if(user){
+
 let doc = await db.collection("users").doc(user.uid).get();
 let data = doc.data();
 
 document.getElementById("authBox").style.display="none";
 document.getElementById("userBox").style.display="block";
-
 document.getElementById("userInfo").innerHTML =
 "Username: " + data.username + "<br>Email: " + data.email;
 
-}else{document.getElementById("plansBox").style.display="none";
+/* PLAN GATE */
+document.getElementById("plansBox").style.display="block";
+
+if(data.plan && data.plan !== "none"){
+document.getElementById("tasksBox").style.display="block";
+}else{
+document.getElementById("tasksBox").style.display="none";
+}
+
+}else{
 document.getElementById("authBox").style.display="block";
 document.getElementById("userBox").style.display="none";
-document.getElementById("tasksBox").style.display="none";}
+document.getElementById("plansBox").style.display="none";
+document.getElementById("tasksBox").style.display="none";
+}
 });
 
 /* SIGNUP */
@@ -154,28 +148,21 @@ function signup(){
 let username=document.getElementById("username").value;
 let email=document.getElementById("email").value;
 let password=document.getElementById("password").value;
-
 let status=document.getElementById("status");
 
-// 👉 capture referral from URL
 const urlParams = new URLSearchParams(window.location.search);
 const ref = urlParams.get("ref");
 
 auth.createUserWithEmailAndPassword(email,password)
 .then(res=>{
 return db.collection("users").doc(res.user.uid).set({
-username: username,
-email: email,
-
+username,
+email,
 balance: 0,
 taskWallet: 0,
 affiliateWallet: 0,
-
 plan: "none",
-
-referralCode: username,
-referredBy: ref || null,   // ✅ NEW LINE
-
+referredBy: ref || null,
 createdAt: new Date()
 });
 })
@@ -201,172 +188,115 @@ document.getElementById("status").innerText=err.message;
 }
 
 /* LOGOUT */
-function logout(){async function activatePlan(planName,planAmount,refBonus){
-
-const user = auth.currentUser;
-
-if(!user){
-alert("Login first");
-return;
+function logout(){
+auth.signOut();
 }
 
-const userRef = db.collection("users").doc(user.uid);
+/* ACTIVATE PLAN */
+async function activatePlan(planName,planAmount,refBonus){
 
+const user = auth.currentUser;
+if(!user){ alert("Login first"); return; }
+
+const userRef = db.collection("users").doc(user.uid);
 const doc = await userRef.get();
 const data = doc.data();
 
-/* update current user's plan */
-await userRef.update({
-plan: planName
-});
+/* update plan */
+await userRef.update({ plan: planName });
 
-/* referral reward */
+/* referral reward (safe) */
 if(data.referredBy){
-
 const query = await db.collection("users")
 .where("username","==",data.referredBy)
 .get();
 
 if(!query.empty){
+let refDoc = query.docs[0];
 
-const referrerDoc = query.docs[0];
-
-const referrerData = referrerDoc.data();
-
-let currentAffiliate =
-referrerData.affiliateWallet || 0;
-
-await referrerDoc.ref.update({
-affiliateWallet:
-currentAffiliate + refBonus
+await refDoc.ref.update({
+affiliateWallet: firebase.firestore.FieldValue.increment(refBonus)
 });
-
+}
 }
 
+alert(planName + " activated ✔");
 }
 
-alert(planName + " activated successfully ✔");
+/* TASK */
 async function completeTask(){
 
 const user = auth.currentUser;
-
-if(!user){
-alert("Login first");
-return;
-}
+if(!user){ alert("Login first"); return; }
 
 const userRef = db.collection("users").doc(user.uid);
-
 const doc = await userRef.get();
 const data = doc.data();
 
+/* BLOCK IF NO PLAN */
+if(data.plan === "none"){
+alert("Activate a plan to access tasks");
+return;
+}
+
 let reward = 0;
 
-/* PLAN TASK REWARD */
 switch(data.plan){
-
-case "NEWBIE":
-reward = 100;
-break;
-
-case "SILVER":
-reward = 150;
-break;
-
-case "GOLD":
-reward = 200;
-break;
-
-case "DIAMOND":
-reward = 250;
-break;
-
-case "PREMIUM":
-reward = 300;
-break;
-
+case "NEWBIE": reward = 100; break;
+case "SILVER": reward = 150; break;
+case "GOLD": reward = 200; break;
+case "DIAMOND": reward = 250; break;
+case "PREMIUM": reward = 300; break;
 default:
-alert("Activate a plan first");
+alert("Invalid plan");
 return;
-
 }
-
-let currentTaskWallet =
-data.taskWallet || 0;
 
 await userRef.update({
-taskWallet:
-currentTaskWallet + reward
+taskWallet: firebase.firestore.FieldValue.increment(reward)
 });
 
-document.getElementById("taskStatus").innerHTML =
+document.getElementById("taskStatus").innerText =
 "Task completed ✔ Earned ₦" + reward;
-
-alert("₦" + reward + " added to Task Wallet");
-
 }
+
+/* ADS */
 async function watchSponsoredAd(){
 
 const user = auth.currentUser;
-
-if(!user){
-alert("Login first");
-return;
-}
+if(!user){ alert("Login first"); return; }
 
 const userRef = db.collection("users").doc(user.uid);
-
 const doc = await userRef.get();
 const data = doc.data();
 
+/* BLOCK IF NO PLAN */
+if(data.plan === "none"){
+alert("Activate a plan to access ads");
+return;
+}
+
 let reward = 0;
 
-/* ADS TASK REWARD */
 switch(data.plan){
-
-case "NEWBIE":
-reward = 200;
-break;
-
-case "SILVER":
-reward = 300;
-break;
-
-case "GOLD":
-reward = 400;
-break;
-
-case "DIAMOND":
-reward = 500;
-break;
-
-case "PREMIUM":
-reward = 600;
-break;
-
+case "NEWBIE": reward = 200; break;
+case "SILVER": reward = 300; break;
+case "GOLD": reward = 400; break;
+case "DIAMOND": reward = 500; break;
+case "PREMIUM": reward = 600; break;
 default:
-alert("Activate a plan first");
+alert("Invalid plan");
 return;
-
 }
-
-let currentTaskWallet =
-data.taskWallet || 0;
 
 await userRef.update({
-taskWallet:
-currentTaskWallet + reward
+taskWallet: firebase.firestore.FieldValue.increment(reward)
 });
 
-document.getElementById("taskStatus").innerHTML =
-"Sponsored Ads Task ✔ Earned ₦" + reward;
+document.getElementById("taskStatus").innerText =
+"Sponsored Ad ✔ Earned ₦" + reward;
+}
 
-alert("₦" + reward + " added to Task Wallet");
-
-}
-}
-auth.signOut();
-}
 </script>
 
 </body>
