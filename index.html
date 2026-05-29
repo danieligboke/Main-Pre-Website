@@ -1,328 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FORTUNE EARNERS</title>
-
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:#f4f6fb;
-}
-
-/* TOP BAR */
-.topbar{
-background:#1e3a8a;
-color:white;
-padding:15px;
-display:flex;
-align-items:center;
-}
-
-.menu-btn{
-font-size:26px;
-cursor:pointer;
-margin-right:15px;
-}
-
-/* SIDE MENU */
-.sidemenu{
-position:fixed;
-top:0;
-left:-260px;
-width:260px;
-height:100%;
-background:#0f172a;
-color:white;
-padding-top:20px;
-transition:0.3s;
-z-index:1000;
-}
-
-.sidemenu a{
-display:block;
-padding:12px;
-color:white;
-text-decoration:none;
-border-bottom:1px solid #1e293b;
-cursor:pointer;
-}
-
-.sidemenu a:hover{
-background:#1e3a8a;
-}
-
-/* MAIN */
-.container{
-padding:15px;
-}
-
-.card{
-background:white;
-padding:15px;
-border-radius:12px;
-margin-bottom:12px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-background:#1e3a8a;
-color:white;
-cursor:pointer;
-}
-
-input{
-width:100%;
-padding:10px;
-margin-top:8px;
-border-radius:8px;
-border:1px solid #ccc;
-}
-
-.small{
-font-size:13px;
-color:#555;
-}
-
-.locked{
-opacity:0.5;
-pointer-events:none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORTUNE EARNERS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        // Custom Tailwind configurations for your branding colors
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBlue: '#0A192F',       // Deep base blue background
+                        brandBlueCard: '#112240',   // Structured inner panels
+                        brandYellow: '#FACC15',     // Primary accent yellow
+                        brandPink: '#EC4899',       // Secondary accent pink
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+    </style>
 </head>
+<body class="bg-brandBlue text-gray-100 font-sans antialiased pb-24">
 
-<body>
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-brandBlue flex flex-col items-center justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brandYellow mb-4"></div>
+        <p class="text-sm font-semibold tracking-wider text-gray-400">LOADING FORTUNE EARNERS...</p>
+    </div>
 
-<!-- SIDE MENU -->
-<div id="menu" class="sidemenu">
-<h3 style="padding-left:12px;">Menu</h3>
+    <div id="auth-container" class="hidden min-h-screen flex items-center justify-center px-4 py-12">
+        
+        <div id="auth-signin" class="view-section active w-full max-w-md bg-brandBlueCard border border-gray-800 rounded-3xl p-6 space-y-6 shadow-xl">
+            <div class="text-center">
+                <h2 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</h2>
+                <p class="text-xs text-gray-400 mt-1">Sign in to manage your daily workspace</p>
+            </div>
+            <form id="signin-form" class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Email Address</label>
+                    <input type="email" id="signin-email" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Security Password</label>
+                    <input type="password" id="signin-password" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-brandYellow to-yellow-500 text-brandBlue font-extrabold py-3.5 rounded-xl shadow-md transition transform active:scale-95 text-sm uppercase tracking-wider">
+                    Sign In Account
+                </button>
+            </form>
+            <div class="text-center text-xs">
+                <span class="text-gray-400">Don't have an account?</span>
+                <button onclick="switchAuthView('signup')" class="text-brandPink font-bold ml-1 hover:underline">Sign up</button>
+            </div>
+        </div>
 
-<a onclick="showSection('home')">Home</a>
-<a onclick="showSection('tasks')">Daily Tasks</a>
-<a onclick="showSection('ads')">Sponsored Ads</a>
-<a onclick="showSection('plans')">Activate A Plan</a>
-<a onclick="showSection('wallet')">Wallet Balance</a>
-<a onclick="showSection('ref')">Referrals</a>
-<a onclick="showSection('adsbiz')">Place Ads</a>
-<a onclick="showSection('about')">About</a>
-<a onclick="showSection('support')">Contact Support</a>
-<a onclick="logout()">Logout</a>
-</div>
+        <div id="auth-signup" class="view-section w-full max-w-md bg-brandBlueCard border border-gray-800 rounded-3xl p-6 space-y-6 shadow-xl">
+            <div class="text-center">
+                <h2 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</h2>
+                <p class="text-xs text-gray-400 mt-1">Create your automated earning gateway</p>
+            </div>
+            <form id="signup-form" class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Full Name</label>
+                    <input type="text" id="signup-fullname" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Username</label>
+                    <input type="text" id="signup-username" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Email Address</label>
+                    <input type="email" id="signup-email" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Security Password</label>
+                    <input type="password" id="signup-password" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-brandYellow uppercase tracking-wide">Referred By</label>
+                    <input type="text" id="signup-ref" readonly class="w-full mt-1.5 bg-brandBlue/50 border border-gray-800 p-3.5 rounded-xl text-sm text-gray-400 font-bold focus:outline-none cursor-not-allowed">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-brandPink to-pink-600 text-white font-extrabold py-3.5 rounded-xl shadow-md transition transform active:scale-95 text-sm uppercase tracking-wider">
+                    Sign Up Now
+                </button>
+            </form>
+            <div class="text-center text-xs">
+                <span class="text-gray-400">Already have an account?</span>
+                <button onclick="switchAuthView('signin')" class="text-brandYellow font-bold ml-1 hover:underline">Sign in</button>
+            </div>
+        </div>
 
-<!-- TOP BAR -->
-<div class="topbar">
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
-<h3>FORTUNE EARNERS</h3>
-</div>
+    </div>
 
-<!-- MAIN -->
-<div class="container">
+    <div id="app-container" class="hidden">
+        
+        <header class="sticky top-0 z-50 bg-brandBlue/90 backdrop-blur-md border-b border-gray-800 px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button id="hamburger-btn" class="text-gray-300 focus:outline-none text-xl p-1 hover:text-brandYellow transition">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="font-extrabold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center bg-brandBlueCard border border-gray-750 px-2.5 py-1 rounded-full text-xs space-x-1.5">
+                    <span class="text-sm">🇳🇬</span>
+                    <span class="font-bold text-gray-300">NG</span>
+                </div>
+                <div id="avatar-fallback" class="w-8 h-8 rounded-full bg-brandPink/30 border border-brandPink flex items-center justify-center text-xs font-bold text-brandPink uppercase">
+                    FE
+                </div>
+            </div>
+        </header>
 
-<!-- HOME -->
-<div id="home" class="card">
-<h3>Dashboard</h3>
-<p><b>Username:</b> <span id="username">-</span></p>
-<p><b>Plan:</b> <span id="plan">-</span></p>
+        <div id="sidebar" class="fixed inset-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex">
+            <div class="w-72 bg-brandBlueCard h-full p-5 shadow-2xl flex flex-col justify-between border-r border-gray-800">
+                <div>
+                    <div class="flex items-center justify-between pb-6 border-b border-gray-800">
+                        <span class="font-bold text-lg text-brandYellow">Navigation Menu</span>
+                        <button id="close-sidebar" class="text-gray-400 hover:text-brandPink text-lg"><i class="fas fa-times"></i></button>
+                    </div>
+                    <nav class="mt-6 space-y-1">
+                        <button onclick="switchMainView('dashboard')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-tasks text-brandYellow w-5"></i><span>Daily Tasks</span></button>
+                        <button onclick="switchMainView('dashboard')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-ad text-brandYellow w-5"></i><span>Sponsored Ads</span></button>
+                        <button onclick="switchMainView('activate')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-gem text-brandYellow w-5"></i><span>Activate A Plan</span></button>
+                        <button onclick="switchMainView('dashboard')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-wallet text-brandYellow w-5"></i><span>Wallet Balance</span></button>
+                        <button onclick="switchMainView('referrals')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-users text-brandYellow w-5"></i><span>Referrals</span></button>
+                        <button onclick="switchMainView('ads')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-bullhorn text-brandYellow w-5"></i><span>Place Ads</span></button>
+                        <button onclick="alert('FORTUNE EARNERS: Premium task optimization and structural network ecosystem.')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-info-circle text-brandYellow w-5"></i><span>About FORTUNE EARNERS</span></button>
+                        <a href="https://t.me/Dani_Tech01" target="_blank" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fab fa-telegram text-brandYellow w-5"></i><span>Contact Support</span></a>
+                    </nav>
+                </div>
+                <button onclick="triggerLogout()" class="w-full bg-red-600/20 hover:bg-red-600 border border-red-600/40 text-red-200 font-medium py-2.5 rounded-xl transition flex items-center justify-center space-x-2">
+                    <i class="fas fa-sign-out-alt"></i><span>Log Out</span>
+                </button>
+            </div>
+            <div id="sidebar-backdrop" class="flex-1 bg-black/60 backdrop-blur-sm"></div>
+        </div>
 
-<p><b>Task Wallet:</b> ₦<span id="taskWallet">0</span></p>
-<p><b>Affiliate Wallet:</b> ₦<span id="affiliateWallet">0</span></p>
-<p><b>Total:</b> ₦<span id="totalWallet">0</span></p>
-
-<hr>
-
-<p><b>Your Referral Link:</b></p>
-<input id="refLink" readonly>
-<button onclick="copyRef()">Copy Link</button>
-</div>
-
-<!-- TASKS -->
-<div id="tasks" class="card">
-<h3>Daily Tasks</h3>
-<p class="small">Complete tasks to earn daily rewards</p>
-<button onclick="completeTask()">Perform Task</button>
-</div>
-
-<!-- ADS -->
-<div id="ads" class="card">
-<h3>Sponsored Ads</h3>
-<p class="small">Watch ads and earn rewards</p>
-<button onclick="watchSponsoredAd()">Watch Ad</button>
-</div>
-
-<!-- PLANS -->
-<div id="plans" class="card">
-<h3>Activate A Plan</h3>
-
-<button onclick="activatePlan('NEWBIE',750,400)">NEWBIE - ₦750</button>
-<button onclick="activatePlan('SILVER',1500,700)">SILVER - ₦1,500</button>
-<button onclick="activatePlan('GOLD',3000,1050)">GOLD - ₦3,000</button>
-<button onclick="activatePlan('DIAMOND',5000,2100)">DIAMOND - ₦5,000</button>
-<button onclick="activatePlan('PREMIUM',7000,3300)">PREMIUM - ₦7,000</button>
-</div>
-
-<!-- WALLET -->
-<div id="wallet" class="card">
-<h3>Wallet Balance</h3>
-<p>Task: ₦<span id="taskWallet2">0</span></p>
-<p>Affiliate: ₦<span id="affiliateWallet2">0</span></p>
-</div>
-
-<!-- REF -->
-<div id="ref" class="card">
-<h3>Referrals</h3>
-<p>Your referral link is already shown on dashboard</p>
-</div>
-
-<!-- PLACE ADS -->
-<div id="adsbiz" class="card">
-<h3>Place Ads</h3>
-<p>Promote your business and reach thousands of active users across the platform instantly 🚀</p>
-<p><b>Contact:</b> t.me/Dani_Tech01</p>
-</div>
-
-<!-- ABOUT -->
-<div id="about" class="card">
-<h3>About FORTUNE EARNERS</h3>
-<p>Earn by completing tasks, watching ads, and referring users.</p>
-</div>
-
-<!-- SUPPORT -->
-<div id="support" class="card">
-<h3>Contact Support</h3>
-<p>t.me/Dani_Tech01</p>
-</div>
-
-</div>
-
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
-<script>
-firebase.initializeApp({
-apiKey: "YOUR_KEY",
-authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_PROJECT"
-});
-
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-let userData = null;
-
-/* MENU */
-function toggleMenu(){
-let m = document.getElementById("menu");
-m.style.left = (m.style.left === "0px") ? "-260px" : "0px";
-}
-
-function showSection(id){
-document.querySelectorAll(".card").forEach(c=>c.style.display="none");
-document.getElementById(id).style.display="block";
-toggleMenu();
-}
-
-/* AUTH */
-auth.onAuthStateChanged(async user=>{
-if(!user) return;
-
-let doc = await db.collection("users").doc(user.uid).get();
-userData = doc.data();
-
-document.getElementById("username").innerText = userData.username;
-document.getElementById("plan").innerText = userData.plan;
-
-let total = (userData.taskWallet||0)+(userData.affiliateWallet||0);
-
-document.getElementById("taskWallet").innerText = userData.taskWallet||0;
-document.getElementById("affiliateWallet").innerText = userData.affiliateWallet||0;
-document.getElementById("totalWallet").innerText = total;
-
-document.getElementById("taskWallet2").innerText = userData.taskWallet||0;
-document.getElementById("affiliateWallet2").innerText = userData.affiliateWallet||0;
-
-document.getElementById("refLink").value =
-"https://fortunearners.netlify.app/signup?ref="+userData.username;
-
-/* LOCK SYSTEM */
-if(userData.plan === "none"){
-document.getElementById("tasks").classList.add("locked");
-document.getElementById("ads").classList.add("locked");
-}
-});
-
-/* COPY REF */
-function copyRef(){
-let r = document.getElementById("refLink");
-r.select();
-document.execCommand("copy");
-alert("Copied!");
-}
-
-/* PLAN */
-async function activatePlan(plan, amount, bonus){
-
-let user = auth.currentUser;
-let ref = db.collection("users").doc(user.uid);
-let data = (await ref.get()).data();
-
-await ref.update({plan});
-
-if(data.referredBy){
-let q = await db.collection("users").where("username","==",data.referredBy).get();
-if(!q.empty){
-q.docs[0].ref.update({
-affiliateWallet: firebase.firestore.FieldValue.increment(bonus)
-});
-}
-}
-
-alert(plan+" activated");
-}
-
-/* TASK */
-async function completeTask(){
-if(!userData || userData.plan==="none"){
-alert("Activate plan first");
-return;
-}
-
-let reward = 100;
-await db.collection("users").doc(auth.currentUser.uid).update({
-taskWallet: firebase.firestore.FieldValue.increment(reward)
-});
-
-alert("Task completed +₦"+reward);
-}
-
-/* ADS */
-async function watchSponsoredAd(){
-if(!userData || userData.plan==="none"){
-alert("Activate plan first");
-return;
-}
-
-let reward = 200;
-await db.collection("users").doc(auth.currentUser.uid).update({
-taskWallet: firebase.firestore.FieldValue.increment(reward)
-});
-
-alert("Ad watched +₦"+reward);
-}
-
-/* LOGOUT */
-function logout(){
-auth.signOut();
-}
-</script>
-
-</body>
-</html>
+        <main class="max-w-md mx-auto p-4 space-y-4">
+            
+            <div class="bg-brandBlueCard border border-brandPink/30 text-gray-300 p-3 rounded-2xl flex items-start space-x-3 text-xs shadow-sm">
+                <i class="fas fa-bullhorn mt-0.5 text-brandPink animate-pulse
