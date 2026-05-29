@@ -12,10 +12,11 @@
             theme: {
                 extend: {
                     colors: {
-                        brandBlue: '#0A192F',       
-                        brandBlueCard: '#112240',   
-                        brandYellow: '#FACC15',     
-                        brandPink: '#EC4899',       
+                        brandDarkGreen: '#042F1A',   // Deep green background base
+                        brandCardGreen: '#0B472A',   // Inner card green
+                        brandLightGreen: '#125C38',  // Wallet segments background
+                        brandYellow: '#D4F038',      // Lime-yellow primary blend accent
+                        brandPink: '#EF4444',        // Secondary alert accent
                     }
                 }
             }
@@ -26,228 +27,150 @@
         .view-section.active { display: block; }
     </style>
 </head>
-<body class="bg-brandBlue text-gray-100 font-sans antialiased pb-24">
+<body class="bg-brandDarkGreen text-gray-100 font-sans antialiased pb-24">
 
-    <div id="loading-screen" class="fixed inset-0 z-[100] bg-brandBlue flex flex-col items-center justify-center transition-all duration-500">
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-brandDarkGreen flex flex-col items-center justify-center">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brandYellow mb-4"></div>
-        <p class="text-sm font-semibold tracking-wider text-gray-400 uppercase">Loading Fortune Earners...</p>
-        <p id="loading-fallback-text" class="text-xs text-brandPink mt-3 font-medium opacity-80 animate-pulse hidden">Bypassing connection lag...</p>
+        <p class="text-sm font-semibold tracking-wider text-gray-400">LOADING FORTUNE EARNERS...</p>
+        <p id="loading-fallback-text" class="text-xs text-gray-500 mt-2 hidden">Bypassing connection lag...</p>
     </div>
 
     <div id="auth-container" class="min-h-screen flex items-center justify-center px-4 py-12">
         
-        <div id="auth-signin" class="view-section active w-full max-w-md bg-brandBlueCard border border-gray-800 rounded-3xl p-6 space-y-6 shadow-xl">
+        <div id="authBox" class="w-full max-w-md bg-brandCardGreen border border-emerald-900 rounded-3xl p-6 space-y-6 shadow-xl">
             <div class="text-center">
-                <h2 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</h2>
-                <p class="text-xs text-gray-400 mt-1">Sign in to manage your daily workspace</p>
+                <h2 class="text-2xl font-black tracking-wider text-brandYellow">FORTUNE EARNERS</h2>
+                <p class="text-xs text-gray-300 mt-1">Manage your daily digital workspace</p>
             </div>
-            <form id="signin-form" onsubmit="event.preventDefault(); bypassAuthToApp();" class="space-y-4">
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Email Address</label>
-                    <input type="email" id="signin-email" value="demo@fortunearners.com" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Security Password</label>
-                    <input type="password" id="signin-password" value="password123" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-brandYellow to-yellow-500 text-brandBlue font-extrabold py-3.5 rounded-xl shadow-md transition transform active:scale-95 text-sm uppercase tracking-wider">
-                    Sign In Account
-                </button>
-            </form>
-            <div class="text-center text-xs">
-                <span class="text-gray-400">Don't have an account?</span>
-                <button onclick="switchAuthView('signup')" class="text-brandPink font-bold ml-1 hover:underline">Sign up</button>
+            
+            <div id="login-form-element" class="space-y-4">
+                <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wide">Account Login</h3>
+                <input type="email" id="loginEmail" placeholder="Email Address" class="w-full bg-brandDarkGreen border border-emerald-800 focus:border-brandYellow p-3 rounded-xl text-sm text-white focus:outline-none transition">
+                <input type="password" id="loginPassword" placeholder="Security Password" class="w-full bg-brandDarkGreen border border-emerald-800 focus:border-brandYellow p-3 rounded-xl text-sm text-white focus:outline-none transition">
+                <button onclick="login()" class="w-full bg-brandYellow text-brandDarkGreen font-extrabold py-3 rounded-xl shadow-md transition transform active:scale-95 text-sm uppercase">Login</button>
+                <p class="text-center text-xs text-gray-400">Don't have an account? <button onclick="document.getElementById('login-form-element').classList.add('hidden'); document.getElementById('signup-form-element').classList.remove('hidden');" class="text-brandYellow font-bold underline">Sign Up</button></p>
             </div>
-        </div>
 
-        <div id="auth-signup" class="view-section w-full max-w-md bg-brandBlueCard border border-gray-800 rounded-3xl p-6 space-y-6 shadow-xl">
-            <div class="text-center">
-                <h2 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</h2>
-                <p class="text-xs text-gray-400 mt-1">Create your automated earning gateway</p>
+            <div id="signup-form-element" class="space-y-4 hidden">
+                <h3 class="text-sm font-bold text-gray-300 uppercase tracking-wide">Create Account</h3>
+                <input type="text" id="username" placeholder="Username ID" class="w-full bg-brandDarkGreen border border-emerald-800 focus:border-brandYellow p-3 rounded-xl text-sm text-white focus:outline-none transition">
+                <input type="email" id="email" placeholder="Email Address" class="w-full bg-brandDarkGreen border border-emerald-800 focus:border-brandYellow p-3 rounded-xl text-sm text-white focus:outline-none transition">
+                <input type="password" id="password" placeholder="Password" class="w-full bg-brandDarkGreen border border-emerald-800 focus:border-brandYellow p-3 rounded-xl text-sm text-white focus:outline-none transition">
+                <button onclick="signup()" class="w-full bg-emerald-500 text-white font-extrabold py-3 rounded-xl shadow-md transition transform active:scale-95 text-sm uppercase">Create Account</button>
+                <p class="text-center text-xs text-gray-400">Already registered? <button onclick="document.getElementById('signup-form-element').classList.add('hidden'); document.getElementById('login-form-element').classList.remove('hidden');" class="text-brandYellow font-bold underline">Login</button></p>
             </div>
-            <form id="signup-form" onsubmit="event.preventDefault(); bypassAuthToApp();" class="space-y-4">
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Full Name</label>
-                    <input type="text" id="signup-fullname" placeholder="John Doe" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Username</label>
-                    <input type="text" id="signup-username" placeholder="coachdaniel" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Email Address</label>
-                    <input type="email" id="signup-email" placeholder="name@domain.com" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Security Password</label>
-                    <input type="password" id="signup-password" required class="w-full mt-1.5 bg-brandBlue border border-gray-800 focus:border-brandYellow p-3.5 rounded-xl text-sm text-white focus:outline-none transition">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-brandYellow uppercase tracking-wide">Referred By</label>
-                    <input type="text" id="signup-ref" readonly class="w-full mt-1.5 bg-brandBlue/50 border border-gray-800 p-3.5 rounded-xl text-sm text-gray-400 font-bold focus:outline-none cursor-not-allowed">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-brandPink to-pink-600 text-white font-extrabold py-3.5 rounded-xl shadow-md transition transform active:scale-95 text-sm uppercase tracking-wider">
-                    Sign Up Now
-                </button>
-            </form>
-            <div class="text-center text-xs">
-                <span class="text-gray-400">Already have an account?</span>
-                <button onclick="switchAuthView('signin')" class="text-brandYellow font-bold ml-1 hover:underline">Sign in</button>
-            </div>
-        </div>
 
+            <p id="status" class="text-center text-xs font-bold mt-2"></p>
+        </div>
     </div>
 
     <div id="app-container" class="hidden">
         
-        <header class="sticky top-0 z-50 bg-brandBlue/90 backdrop-blur-md border-b border-gray-800 px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <button id="hamburger-btn" class="text-gray-300 focus:outline-none text-xl p-1 hover:text-brandYellow transition">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <span class="font-extrabold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brandYellow to-brandPink">FORTUNE EARNERS</span>
+        <header class="bg-brandDarkGreen px-4 py-3 flex items-center justify-between max-w-md mx-auto">
+            <div class="w-9 h-9 rounded-full bg-brandCardGreen flex items-center justify-center text-gray-300 cursor-pointer">
+                <i class="fas fa-th-large"></i>
             </div>
             <div class="flex items-center space-x-3">
-                <div class="flex items-center bg-brandBlueCard border border-gray-700 px-2.5 py-1 rounded-full text-xs space-x-1.5">
-                    <span class="text-sm">🇳🇬</span>
-                    <span class="font-bold text-gray-300">NG</span>
+                <div class="flex items-center bg-brandCardGreen px-2.5 py-1 rounded-full text-xs space-x-1">
+                    <span>🇳🇬</span> <span class="font-bold text-gray-300">NG</span>
                 </div>
-                <div id="avatar-fallback" class="w-8 h-8 rounded-full bg-brandPink/30 border border-brandPink flex items-center justify-center text-xs font-bold text-brandPink uppercase">
-                    CD
+                <div id="avatar-fallback" class="w-8 h-8 rounded-full bg-brandYellow text-brandDarkGreen flex items-center justify-center text-xs font-bold uppercase">
+                    CO
                 </div>
             </div>
         </header>
 
-        <div id="sidebar" class="fixed inset-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex">
-            <div class="w-72 bg-brandBlueCard h-full p-5 shadow-2xl flex flex-col justify-between border-r border-gray-800">
-                <div>
-                    <div class="flex items-center justify-between pb-6 border-b border-gray-800">
-                        <span class="font-bold text-lg text-brandYellow">Navigation Menu</span>
-                        <button id="close-sidebar" class="text-gray-400 hover:text-brandPink text-lg"><i class="fas fa-times"></i></button>
-                    </div>
-                    <nav class="mt-6 space-y-1">
-                        <button onclick="switchMainView('dashboard')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-tasks text-brandYellow w-5"></i><span>Daily Tasks</span></button>
-                        <button onclick="switchMainView('dashboard')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-ad text-brandYellow w-5"></i><span>Sponsored Ads</span></button>
-                        <button onclick="switchMainView('activate')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-gem text-brandYellow w-5"></i><span>Activate A Plan</span></button>
-                        <button onclick="switchMainView('dashboard')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-wallet text-brandYellow w-5"></i><span>Wallet Balance</span></button>
-                        <button onclick="switchMainView('referrals')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-users text-brandYellow w-5"></i><span>Referrals</span></button>
-                        <button onclick="switchMainView('ads')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-bullhorn text-brandYellow w-5"></i><span>Place Ads</span></button>
-                        <button onclick="alert('FORTUNE EARNERS: Premium task optimization and structural network ecosystem.')" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fas fa-info-circle text-brandYellow w-5"></i><span>About FORTUNE EARNERS</span></button>
-                        <a href="https://t.me/Dani_Tech01" target="_blank" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-brandBlue text-gray-300 hover:text-brandYellow transition"><i class="fab fa-telegram text-brandYellow w-5"></i><span>Contact Support</span></a>
-                    </nav>
-                </div>
-                <button onclick="triggerLogout()" class="w-full bg-red-600/20 hover:bg-red-600 border border-red-600/40 text-red-200 font-medium py-2.5 rounded-xl transition flex items-center justify-center space-x-2">
-                    <i class="fas fa-sign-out-alt"></i><span>Log Out</span>
-                </button>
-            </div>
-            <div id="sidebar-backdrop" class="flex-1 bg-black/60 backdrop-blur-sm"></div>
-        </div>
-
         <main class="max-w-md mx-auto p-4 space-y-4">
             
-            <div class="bg-brandBlueCard border border-brandPink/30 text-gray-300 p-3 rounded-2xl flex items-start space-x-3 text-xs shadow-sm">
-                <i class="fas fa-bullhorn mt-0.5 text-brandPink animate-pulse"></i>
-                <p><strong>Notice:</strong> Affiliate Withdrawals are everyday and task withdrawals are every 10th and 30th of each month.</p>
-            </div>
-
             <div id="view-dashboard" class="view-section active space-y-4">
                 
-                <div class="bg-brandBlueCard border border-gray-800 rounded-3xl p-5 space-y-5 shadow-xl">
+                <div class="bg-brandCardGreen rounded-3xl p-5 space-y-4 shadow-xl">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
-                            <div id="avatar-initials" class="w-12 h-12 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center text-sm font-black text-brandYellow uppercase">
-                                CD
-                            </div>
+                            <div id="avatar-circle" class="w-12 h-12 rounded-full bg-emerald-800/60 border border-emerald-700 flex items-center justify-center text-sm font-black text-brandYellow uppercase">CO</div>
                             <div>
-                                <p class="text-xs text-gray-400">Welcome Back</p>
-                                <h2 id="dyn-dashboard-user" class="text-base font-black text-white">CoachDaniel</h2>
+                                <p class="text-[11px] text-gray-400">Welcome Back</p>
+                                <h2 id="dyn-username" class="text-base font-black text-white">CoachDaniel</h2>
                             </div>
                         </div>
-                        <span id="dyn-dashboard-plan" class="bg-brandYellow text-brandBlue font-black text-[10px] px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                        <span id="dyn-plan-badge" class="bg-brandYellow text-brandDarkGreen font-black text-[10px] px-3 py-1.5 rounded-full uppercase tracking-wider">
                             NEWBIE PLAN
                         </span>
                     </div>
 
-                    <div class="bg-gradient-to-br from-brandYellow to-yellow-400 rounded-2xl p-5 text-brandBlue flex justify-between items-center relative overflow-hidden shadow-lg">
-                        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-brandBlue/5 border-[12px] border-brandBlue/10 pointer-events-none"></div>
+                    <div class="bg-brandYellow rounded-2xl p-5 text-brandDarkGreen flex justify-between items-center relative overflow-hidden">
                         <div>
-                            <span class="text-xs font-semibold opacity-85 block uppercase tracking-wide">Account Balance</span>
+                            <span class="text-xs font-medium text-brandDarkGreen/80 block">Account Balance</span>
                             <span class="text-2xl font-black mt-0.5 block">₦<span id="dyn-total-bal">12,000.00</span></span>
                         </div>
-                        <button onclick="switchMainView('withdraw')" class="bg-brandBlue hover:bg-brandBlue/90 text-white font-extrabold text-sm px-5 py-2.5 rounded-xl shadow-md transition relative z-10">
+                        <button onclick="switchMainView('withdraw')" class="bg-brandDarkGreen text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition transform active:scale-95">
                             Withdraw
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-brandBlue border border-gray-800 p-3.5 rounded-2xl flex flex-col justify-between">
-                            <div class="w-8 h-8 rounded-xl bg-brandPink/10 flex items-center justify-center text-brandPink mb-2"><i class="fas fa-users text-xs"></i></div>
+                    <div class="bg-brandLightGreen rounded-2xl p-3 grid grid-cols-2 gap-3">
+                        <div class="bg-brandCardGreen p-3 rounded-xl flex items-center space-x-2.5">
+                            <div class="text-brandYellow"><i class="fas fa-users text-sm"></i></div>
                             <div>
-                                <span class="text-base font-black text-white block">₦<span id="dyn-aff-bal">800.00</span></span>
-                                <span class="text-[10px] text-gray-400 uppercase font-medium tracking-wide block">Affiliate</span>
+                                <span class="text-sm font-black text-brandYellow block">₦<span id="dyn-aff-bal">800.00</span></span>
+                                <span class="text-[10px] text-gray-400 block font-medium">Affiliate</span>
                             </div>
                         </div>
-                        <div class="bg-brandBlue border border-gray-800 p-3.5 rounded-2xl flex flex-col justify-between">
-                            <div class="w-8 h-8 rounded-xl bg-brandYellow/10 flex items-center justify-center text-brandYellow mb-2"><i class="fas fa-wallet text-xs"></i></div>
+                        <div class="bg-brandCardGreen p-3 rounded-xl flex items-center space-x-2.5">
+                            <div class="text-brandYellow"><i class="fas fa-briefcase text-sm"></i></div>
                             <div>
-                                <span class="text-base font-black text-white block">₦<span id="dyn-task-bal">11,200.00</span></span>
-                                <span class="text-[10px] text-gray-400 uppercase font-medium tracking-wide block">Tasks Earnings</span>
+                                <span class="text-sm font-black text-brandYellow block">₦<span id="dyn-task-bal">11,200.00</span></span>
+                                <span class="text-[10px] text-gray-400 block font-medium">Tasks Earnings</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-brandBlue border border-gray-800 rounded-2xl p-3 flex items-center justify-between">
-                        <div class="flex items-center space-x-2.5 overflow-hidden w-full mr-2">
-                            <div class="text-brandYellow text-sm"><i class="fas fa-link"></i></div>
-                            <input id="dyn-ref-url" type="text" class="bg-transparent text-xs text-gray-300 w-full focus:outline-none select-all font-mono" readonly value="https://rarevault.biz/signup?ref=CoachDaniel">
+                    <div class="bg-brandLightGreen rounded-xl p-2.5 flex items-center justify-between border border-emerald-800">
+                        <div class="flex items-center space-x-2 overflow-hidden w-full mr-2">
+                            <i class="fas fa-briefcase text-brandYellow text-xs"></i>
+                            <input id="dyn-ref-url" type="text" class="bg-transparent text-[11px] text-brandYellow w-full focus:outline-none select-all font-mono" readonly value="https://rarevault.biz/signup?ref=CoachDaniel">
                         </div>
-                        <button onclick="copyReferralLink()" class="w-8 h-8 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition flex-shrink-0">
+                        <button onclick="copyReferralLink()" class="w-7 h-7 rounded-lg bg-brandCardGreen text-brandYellow flex items-center justify-center flex-shrink-0">
                             <i class="far fa-copy text-xs"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="bg-brandBlueCard border border-gray-800 rounded-3xl p-5 space-y-4 shadow-xl">
+                <div class="bg-white text-gray-800 rounded-3xl p-5 space-y-4 shadow-md">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-white tracking-wide">Weekly Top Affiliates</h3>
-                        <button class="text-xs text-brandYellow font-semibold flex items-center space-x-1">
-                            <span>View All</span> <i class="fas fa-chevron-right text-[10px]"></i>
+                        <h3 class="text-sm font-bold text-emerald-800">Weekly Top Affiliates</h3>
+                        <button class="bg-emerald-500 text-white text-[11px] px-3 py-1 rounded-full flex items-center space-x-1 font-semibold">
+                            <span>View All</span> <i class="fas fa-chevron-right text-[9px]"></i>
                         </button>
                     </div>
-                    <p class="text-xs text-gray-400 -mt-2">This week winners</p>
+                    <p class="text-xs text-gray-500 -mt-2">This week winners</p>
                     
                     <div class="grid grid-cols-3 gap-2 pt-2 text-center">
-                        <div class="flex flex-col items-center space-y-2">
-                            <span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">₦10,000</span>
-                            <div class="w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden bg-gray-700">
-                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover" alt="Winner 1">
+                        <div class="flex flex-col items-center space-y-1.5">
+                            <span class="bg-red-500 text-white font-bold text-[9px] px-2 py-0.5 rounded-full">₦10,000</span>
+                            <div class="w-14 h-14 rounded-full border-2 border-emerald-500 overflow-hidden bg-gray-200">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" class="w-full h-full object-cover">
                             </div>
                         </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">₦5,000</span>
-                            <div class="w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden bg-gray-700">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover" alt="Winner 2">
+                        <div class="flex flex-col items-center space-y-1.5">
+                            <span class="bg-red-500 text-white font-bold text-[9px] px-2 py-0.5 rounded-full">₦5,000</span>
+                            <div class="w-14 h-14 rounded-full border-2 border-emerald-500 overflow-hidden bg-gray-200">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" class="w-full h-full object-cover">
                             </div>
                         </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">₦3,000</span>
-                            <div class="w-14 h-14 rounded-full border-2 border-blue-500 flex items-center justify-center bg-brandBlue text-gray-400 text-xl">
+                        <div class="flex flex-col items-center space-y-1.5">
+                            <span class="bg-red-500 text-white font-bold text-[9px] px-2 py-0.5 rounded-full">₦3,000</span>
+                            <div class="w-14 h-14 rounded-full border-2 border-emerald-500 flex items-center justify-center bg-emerald-100 text-emerald-600 text-2xl">
                                 <i class="fas fa-user-circle"></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-brandBlueCard border border-gray-800 rounded-2xl p-4 space-y-2">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center space-x-2">
-                        <span class="w-1 h-3 bg-brandPink rounded-full"></span>
-                        <span>Daily Earning Center</span>
-                    </h3>
-                    <button onclick="executeDailyTask()" class="w-full bg-brandBlue border border-gray-800 py-3.5 px-4 rounded-xl flex items-center justify-between text-sm hover:border-brandYellow transition">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-check-double text-brandYellow text-base"></i>
-                            <span class="font-medium text-gray-200">Perform Daily Micro-Tasks</span>
-                        </div>
-                        <span id="dyn-tasks-left-badge" class="text-xs bg-brandBlueCard text-brandYellow px-2.5 py-1 rounded-md border border-gray-750">5 Left</span>
+                <div id="tasksBox" class="bg-brandCardGreen rounded-2xl p-4 space-y-3">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Daily Execution Desk</h3>
+                    <button onclick="completeTask()" class="w-full bg-brandDarkGreen border border-emerald-800 py-3 px-4 rounded-xl flex items-center justify-between text-sm hover:border-brandYellow transition">
+                        <span class="font-medium text-gray-200">Perform Daily Task</span>
+                        <i class="fas fa-check-circle text-brandYellow"></i>
                     </button>
-                    <button onclick="executeSponsoredAd()" class="w-full bg-brandBlue border border-gray-800 py-3
+                    <button onclick="watchSponsoredAd()" class="w-full bg-brandDarkGreen border border-emerald-800 py-3 px-4 rounded-xl flex items-center justify-between text-sm hover
